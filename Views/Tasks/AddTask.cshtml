@@ -1,0 +1,747 @@
+﻿@model IMSMIS.Models.Tasks
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" href="~/css/Tasks.css">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.snow.css">
+	<link rel="stylesheet" href="https://unpkg.com/quill-table-ui@1.0.0/dist/index.css">
+	<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+	<script src="https://unpkg.com/quill-table-ui@1.0.0/dist/index.js"></script>
+	<style>
+
+		#cancelBtn {
+			border: 1px solid gray;
+		}
+
+			#cancelBtn:hover {
+				border: 1px solid #0665F7;
+			}
+
+			#cancelBtn:focus {
+				box-shadow: none;
+			}
+
+		.summary-input {
+			border: none;
+			border-bottom: 1px solid #ccc;
+			outline: none;
+			width: 100%;
+			margin-bottom: 10px;
+			padding: 5px;
+			box-sizing: border-box;
+			font-size: 25px;
+			font-weight: bold;
+		}
+
+		.expandable-input {
+			min-height: 350px;
+			width: 100%;
+			resize: vertical;
+			overflow: auto;
+			padding: 20px;
+			font-size: 20px;
+			font-weight: 500;
+			border: 1px solid #ccc;
+		}
+
+			.expandable-input:focus {
+				outline: none;
+				border: 1px solid #ccc;
+			}
+
+		.dropdown-container {
+			position: relative;
+			width: 100%;
+			margin-bottom: 15px;
+		}
+
+			.dropdown-container label {
+				margin-bottom: 5px;
+				display: block;
+				font-weight: 600;
+			}
+
+			.dropdown-container select, .dropdown-container input {
+				width: calc(100% - 1px);
+			}
+
+		#datefilter {
+			width: calc(100% - 1px);
+		}
+
+			#datefilter:focus {
+				border-color: #ccc;
+				box-shadow: none;
+				outline: none;
+			}
+
+		.dropdown-container select:focus, .dropdown-container input:focus {
+			border-color: #ccc;
+			box-shadow: none;
+			outline: none;
+		}
+
+		.dropdown-container {
+			width: 90%;
+		}
+
+		.image-upload {
+			border: 1px solid #F1F4F7;
+			padding: 5px;
+			border-radius: 4px;
+		}
+
+			.image-upload > input {
+				display: none;
+			}
+
+			.image-upload i {
+				width: 80px;
+				cursor: pointer;
+			}
+
+		#addfiles {
+			font-size: 17px;
+			color: #007FFD;
+		}
+
+		#file-names {
+			font-size: 16px;
+			font-weight: 500;
+			display: flex;
+			flex-wrap: wrap;
+		}
+
+		.file-box {
+			border: 1px solid #ccc;
+			border-radius:8px;
+			position: relative;
+			padding:3px;
+			margin-left: 8px;
+			margin-bottom:8px;
+			height:5rem;
+			width:7rem;
+			overflow:hidden;
+		}
+
+		.header{
+			font-weight:bold;
+		}
+		.icons-container {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+		.bi{
+			font-size:20px;
+		}
+
+			.icons-container i {
+				margin-left: 13px;
+				cursor:pointer;
+			}
+		.input-container {
+			position: relative;
+			width:100%;
+		}
+
+			.input-container input {
+				padding-right: 30px; 
+			}
+
+			.input-container .icon {
+				position: absolute;
+				top: 55%;
+				right: 10px; 
+				transform: translateY(-50%);
+				color: #888; 
+				font-size: 1.4em; /* Adjust icon size */
+			}
+			.required{
+				color:red;
+				font-weight:400;
+				margin-left:2px;
+			}
+
+		.modal {
+			display: none; 
+			position: fixed; 
+			z-index: 1000;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto; 
+			background-color: rgba(0, 0, 0, 0.5); 
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			margin: auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 30%; 
+			height: 30%; 
+			overflow: hidden; 
+			position: relative;
+		}
+
+		/* Close button */
+		.close {
+			position: absolute;
+			right: 20px;
+			top: 10px;
+			color: #aaa;
+			font-size: 28px;
+			font-weight: bold;
+		}
+
+			.close:hover,
+			.close:focus {
+				color: black;
+				text-decoration: none;
+				cursor: pointer;
+			}
+
+		/* CSS for modal input box */
+		.modal input[type="text"] {
+			margin-top:15px;
+			width: calc(100% - 80px); 
+			padding: 8px;
+			margin-bottom: 15px;
+			border: 1px solid #ccc; 
+			border-radius:7px;
+		}
+
+
+		.btn-cancel {
+			background-color: #fff;
+			color: black; 
+			border:1px solid #444;
+		}
+
+			.btn-cancel:hover{
+				background-color: #fff;
+				border:1px solid #007bff;
+			}
+
+
+		.button-container {
+			text-align: right; 
+		}
+
+	</style>
+	<title>Tasks</title>
+
+</head>
+
+<body>
+	<div class="card" style="margin-top:10px;">
+		<div class="card-body" style="padding:10px;">
+			<form method="post" asp-controller="Tasks" asp-action="SaveTask">
+				<div class="form row" style="padding:20px;">
+					<div class="col-9">
+						<input type="text" class="summary-input" placeholder="Title" asp-for="Summary" autocomplete="off" required>
+@* 						<textarea id="descriptionTextArea" asp-for="Description" placeholder="Type description here" class=" expandable-input" rows="12" required></textarea> *@
+						<div id="editor-container" style="height: 230px;"></div>
+						<input type="hidden" id="descriptionInput" asp-for="Description" />
+						<script>
+							var quill = new Quill('#editor-container', {
+								theme: 'snow',
+								modules: {
+									table: true,
+									toolbar: [
+										[{ 'header': [1, 2, false] }],
+										['bold', 'italic', 'underline'],
+										['link', 'image'],
+										[{ 'list': 'ordered' }, { 'list': 'bullet' }],
+										[{ 'align': [] }],
+										['clean'],
+										[{ 'table': 'insertTable' }, { 'table': 'insertRowAbove' }, { 'table': 'insertRowBelow' }, { 'table': 'insertColumnLeft' }, { 'table': 'insertColumnRight' }, { 'table': 'deleteRow' }, { 'table': 'deleteColumn' }, { 'table': 'deleteTable' }]
+									]
+								}
+							});
+
+							var descriptionInput = document.querySelector('#descriptionInput');
+							quill.on('text-change', function () {
+								descriptionInput.value = quill.root.innerHTML;
+							});
+						</script>
+
+						<div class="mb-3">
+							<input type="file" name="file" id="fileInput" class="form-control" style="display: none;" onchange="uploadFile(this)" />
+
+							<label for="fileInput" style="cursor: pointer;">
+								<i class="ri-attachment-2" style="color:blue"></i> 
+								Click here to upload files
+							</label>
+						</div>
+
+						@* <input type="hidden" id="fileNames" asp-for="filenames" readonly style="margin-left: 10px; border: 1px solid #ccc;"> *@
+						<input type="hidden" id="fileNames" asp-for="filenames" readonly style="margin-left: 10px; border: 1px solid #ccc;">
+						<span class="text-success" id="uploadMessage">
+							@ViewBag.Message
+						</span>
+						<div class="file-container" id="fileContainer" style="display:flex; flex-direction: row; flex-wrap: wrap;"></div>
+
+
+
+					</div>
+					<div class="col-3" style="box-shadow: 0 0 5px rgba(117, 117, 117, 0.5); padding:20px; border-radius:5px;">
+						<div class="dropdown-container">
+							<label for="project-dropdown">Project<span class="required">*</span></label>
+							<select id="project-dropdown" class="form-select mb-1" asp-for="Project" required>
+								<option value="" selected disabled hidden>Choose Project</option>
+								<option>NHA</option>
+								<option>Disability</option>
+								<option>EPIC</option>
+							</select>
+						</div>
+						<div class="dropdown-container">
+							<label for="type-dropdown">Type<span class="required">*</span></label>
+							
+							<select id="type-dropdown" class="form-select mb-1" asp-for="Type" required>
+								<option value="" selected disabled hidden>Choose Type</option>
+								<option>Development</option>
+								<option>Data Processing</option>
+							</select>
+						</div>
+						<div class="dropdown-container">
+							<label for="priority-dropdown">Priority<span class="required">*</span></label>
+							<select id="priority-dropdown" class="form-select mb-1" asp-for="Priority" required>
+								<option value="" selected disabled hidden>Choose Priority</option>
+								<option>Critical</option>
+								<option>Show Stopper</option>
+								<option>Major</option>
+								<option>Normal</option>
+								<option>Minor</option>
+							</select>
+						</div>
+						<div class="dropdown-container">
+							<label for="state-dropdown">Status<span class="required">*</span></label>
+							<select id="state-dropdown" class="form-select mb-1" asp-for="Status" required>
+								@* <option value="" selected disabled hidden>Choose Status</option> *@
+								<option value="Open" selected>Open</option>
+								<option disabled>In Progress</option>
+								<option disabled>To Verify</option>
+								<option disabled>Done</option>
+								<option disabled>On Hold</option>
+							</select>
+						</div>
+						<div class="dropdown-container">
+							<label for="assignee-dropdown">Assignee<span class="required">*</span></label>
+							<select id="assignee-dropdown" class="form-select mb-1" asp-for="Assignee" required>
+								<option value="" selected disabled hidden>Choose Assignee</option>
+								@foreach (var assignee in ViewBag.Assignees)
+								{
+									<option>@assignee</option>
+								}
+							</select>
+						</div>
+
+						<div class="dropdown-container">
+							<label for="estimated-daterange">Estimated Completion Date<span class="required">*</span></label>
+							<div class="input-group mb-2">
+								<div class="input-container">
+									<input type="text" class="form-control" name="datefilter" id="datefilter" value="Select Date Range" required />
+									<i class="bi bi-calendar-day icon" onclick="$('#datefilter').focus();" style="cursor:pointer;"></i>
+								</div>
+							</div>
+						</div>
+						<div class="dropdown-container">
+							<label for="estimated-days">Estimated Days</label>
+							<div class="input-group mb-2">
+								<input type="text" class="form-control" asp-for="EstimatedDays"  id="days-count" readonly />
+							</div>
+						</div>
+
+						<input type="hidden" asp-for="StartDate" id="startDate" />
+						<input type="hidden" asp-for="EndDate" id="endDate" />
+
+					</div>
+					<div class="row mt-3">
+						<div class="col">
+							<button type="submit" id="createBtn" class="btn btn-primary">Create</button>
+							<a href="@Url.Action("Tasks", "Tasks")" id="cancelBtn" class="btn btn-outline">Cancel</a>
+						</div>
+					</div>
+				</div>
+
+			</form>
+
+		</div>
+	</div>
+	@* <script>
+		ClassicEditor
+			.create(document.querySelector('#descriptionTextArea'))
+			.catch(error => {
+				console.error(error);
+			});
+	</script> *@
+
+	<script>
+		const fileInput = document.getElementById('fileInput');
+		const uploadButtonContainer = document.getElementById('uploadButtonContainer');
+
+		fileInput.addEventListener('change', function () {
+
+			if (this.files && this.files.length > 0) {
+				uploadButtonContainer.style.display = 'block';
+			} else {
+				uploadButtonContainer.style.display = 'none';
+			}
+		});
+	</script>
+	<script>
+		document.getElementById("fileInput").addEventListener("change", function () {
+			var formData = new FormData();
+			var fileInput = this;
+			var filename = fileInput.files[0].name; // Full filename with extension
+			var fileExt = filename.split('.').pop();
+			var fileExtension = filename.split('.').pop().toUpperCase();
+			var filenameWithoutExtension = filename.replace(/\.[^/.]+$/, "");
+			formData.append("file", fileInput.files[0]);
+
+			var filenamelist = document.getElementById("fileNames");
+			//filenamelist.value = filename; // Use filename with extension
+
+			if (filenamelist.value.trim() !== '') {
+				var filenames = filenamelist.value.split(',').map(function (item) {
+					return item.trim();
+				});
+				if (filenames.indexOf(filename) === -1) {
+					filenamelist.value += ', ' + filename; 
+				}
+			} else {
+				filenamelist.value = filename; 
+			}
+
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "@Url.Action("Upload", "Tasks")");
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+					var response = JSON.parse(xhr.responseText);
+					var filePath = response.filePath.replace(/\\/g, '/');
+					if (response.filePath) {
+						var filePath = response.filePath.replace(/\\/g, '/');
+
+						// Check if the file with the same filename already exists in the file container
+						var fileExists = Array.from(document.querySelectorAll('.filename')).some(function (element) {
+							return element.textContent === filenameWithoutExtension;
+						});
+
+						if (!fileExists) {
+							// Create and append the file box only if the file doesn't exist
+							var fileBox = document.createElement("div");
+							fileBox.classList.add("file-box");
+
+							var header = document.createElement("div");
+							header.classList.add("header");
+							header.textContent = fileExtension;
+							fileBox.appendChild(header);
+
+							var fileNameSpan = document.createElement("span");
+							fileNameSpan.textContent = filenameWithoutExtension;
+							fileNameSpan.classList.add("filename");
+							fileBox.appendChild(fileNameSpan);
+
+							var fileContainer = document.getElementById("fileContainer");
+
+							fileBox.addEventListener("mouseenter", function () {
+								header.style.display = 'none';
+								fileNameSpan.style.display = 'none';
+								fileContainer.style.margin = '0';
+
+								fileBox.title = filename;
+
+								var iconsContainer = document.createElement("div");
+								iconsContainer.classList.add("icons-container");
+
+								var editIcon = document.createElement("i");
+								editIcon.classList.add("bi", "bi-pencil");
+								editIcon.addEventListener("click", function (event) {
+
+									var modal = document.createElement("div");
+									modal.classList.add("modal");
+
+									var modalContent = document.createElement("div");
+									modalContent.classList.add("modal-content");
+
+									var modalHeading = document.createElement("h2");
+									modalHeading.textContent = "Edit Attachments";
+									modalContent.appendChild(modalHeading);
+
+									var inputBox = document.createElement("input");
+									inputBox.setAttribute("type", "text");
+									inputBox.setAttribute("placeholder", "Enter new filename");
+									inputBox.style.width = "100%";
+									inputBox.value = filename;
+									modalContent.appendChild(inputBox);
+
+									var buttonContainer = document.createElement("div");
+									buttonContainer.classList.add("button-container"); // Add button container class
+									modalContent.appendChild(buttonContainer);
+
+									var saveButton = document.createElement("button");
+									saveButton.textContent = "Save";
+									saveButton.classList.add("btn", "btn-primary", "btn-sm");
+									saveButton.style.marginRight = "5px";
+									saveButton.addEventListener("click", function () {
+										var newFilename = inputBox.value.trim() ;
+
+										// Extract the original filename and extension
+										var originalFilename = filename;
+
+										if (newFilename !== '') {
+
+											var filenamesArray = filenamelist.value.split(',').map(function (item) {
+												return item.trim() === originalFilename ? newFilename : item.trim();
+											});
+											var updatedFilenames = filenamesArray.join(', ');
+
+											filenamelist.value = updatedFilenames;
+
+										
+											// var url = "@Url.Action("EditFile", "Tasks")" + "?originalFilename=" + encodeURIComponent(originalFilename) + "&changedFilename=" + encodeURIComponent(newFilename);
+											// window.location.href = url;
+											var xhr = new XMLHttpRequest();
+											xhr.open("GET", "@Url.Action("EditFile", "Tasks")" + "?originalFilename=" + encodeURIComponent(originalFilename) + "&changedFilename=" + encodeURIComponent(newFilename), true);
+											xhr.setRequestHeader("Content-Type", "application/json");
+											xhr.onreadystatechange = function () {
+												if (xhr.readyState === XMLHttpRequest.DONE) {
+													if (xhr.status === 200) {
+														console.log("File renamed successfully");
+														fileNameSpan.textContent = newFilename.replace(/\.[^/.]+$/, "");
+														fileBox.title = newFilename;
+														filename = newFilename; // Update the filename variable
+														filenameWithoutExtension = newFilename.replace(/\.[^/.]+$/, "");
+														modal.style.display = "none";
+													} else {
+														console.error("An error occurred: " + xhr.responseText);
+													}
+												}
+											};
+											xhr.send();
+										} else {
+											
+										}
+									});
+
+
+
+
+
+									buttonContainer.appendChild(saveButton);
+
+									// Cancel button
+									var cancelButton = document.createElement("button");
+									cancelButton.textContent = "Cancel";
+									cancelButton.classList.add("btn", "btn-cancel", "btn-sm"); // Add btn, btn-cancel, and btn-sm classes
+									cancelButton.addEventListener("click", function () {
+										modal.style.display = "none";
+									});
+									buttonContainer.appendChild(cancelButton);
+
+									// Append modal content to modal
+									modal.appendChild(modalContent);
+
+									// Append modal to document body
+									document.body.appendChild(modal);
+
+									// Display the modal
+									modal.style.display = "flex";
+
+									// When the user clicks anywhere outside of the modal, close it
+									window.onclick = function (event) {
+										if (event.target == modal) {
+											modal.style.display = "none";
+										}
+									};
+								});
+
+
+
+
+								iconsContainer.appendChild(editIcon);
+
+								var downloadIcon = document.createElement("i");
+								downloadIcon.classList.add("bi", "bi-box-arrow-down");
+								downloadIcon.addEventListener("click", function (event) {
+									var fileName = filenameWithoutExtension + '.' + fileExt;
+									window.location.href = "@Url.Action("DownloadFile1", "Tasks")" + "?fileName=" + encodeURIComponent(fileName);
+								});
+								iconsContainer.appendChild(downloadIcon);
+
+								var deleteIcon = document.createElement("i");
+								deleteIcon.classList.add("bi", "bi-trash3-fill");
+								deleteIcon.addEventListener("click", function (event) {
+									var fileName = filenameWithoutExtension + '.' + fileExtension;
+									var xhrDelete = new XMLHttpRequest();
+									xhrDelete.open("POST", "@Url.Action("DeleteFile", "Tasks")" + "?fileName=" + encodeURIComponent(fileName));
+									xhrDelete.onload = function () {
+										if (xhrDelete.status === 200) {
+
+											fileBox.remove();
+											var currentFilenames = filenamelist.value.split(',').map(function (item) {
+												return item.trim();
+											});
+											var indexToRemove = currentFilenames.indexOf(filename);
+											if (indexToRemove !== -1) {
+												currentFilenames.splice(indexToRemove, 1);
+												filenamelist.value = currentFilenames.join(', ');
+											}
+
+										} else {
+
+											console.error("File deletion failed!");
+										}
+									};
+									xhrDelete.send();
+								});
+								iconsContainer.appendChild(deleteIcon);
+
+								fileBox.appendChild(iconsContainer);
+
+								iconsContainer.style.width = fileBox.offsetWidth + 'px';
+							});
+
+							fileBox.addEventListener("mouseleave", function () {
+								header.style.display = 'block';
+								fileNameSpan.style.display = 'block';
+								var iconsContainer = fileBox.querySelector(".icons-container");
+								if (iconsContainer) {
+									iconsContainer.remove();
+								}
+							});
+
+							fileContainer.appendChild(fileBox);
+						}
+					}
+				} else {
+					document.getElementById("uploadMessage").textContent = "File upload failed!";
+				}
+				fileInput.value = '';
+			};
+			xhr.send(formData);
+		});
+
+	</script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+		// $(function () {
+		// 	$('input[name="datefilter"]').daterangepicker({
+		// 		autoUpdateInput: false,
+		// 		locale: {
+		// 			format: 'DD/MM/YYYY'
+		// 		},
+		// 		minDate: moment().startOf('day'),
+		// 		autoApply: true, // Automatically apply the date range
+		// 		applyButtonClasses: 'd-none', // Hide the apply button
+		// 		cancelButtonClasses: 'd-none', // Hide the cancel button
+		// 	});
+
+		// 	$('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
+		// 		$('#startDate').val(picker.startDate.format('YYYY-MM-DD'));
+		// 		$('#endDate').val(picker.endDate.format('YYYY-MM-DD'));
+		// 		$(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+
+		// 		var startDate = picker.startDate;
+		// 		var endDate = picker.endDate;
+		// 		var dayDifference = endDate.diff(startDate, 'days') + 1;
+
+		// 		$('#days-count').val(dayDifference);
+		// 	});
+
+		// 	// Automatically trigger apply event when end date is selected
+		// 	$('input[name="datefilter"]').on('hide.daterangepicker', function (ev, picker) {
+		// 		$('#startDate').val(picker.startDate.format('YYYY-MM-DD'));
+		// 		$('#endDate').val(picker.endDate.format('YYYY-MM-DD'));
+		// 		$(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+
+		// 		var startDate = picker.startDate;
+		// 		var endDate = picker.endDate;
+		// 		var dayDifference = endDate.diff(startDate, 'days') + 1;
+
+		// 		$('#days-count').val(dayDifference);
+		// 	});
+
+		// 	$('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
+		// 		$('#startDate').val('');
+		// 		$('#endDate').val('');
+		// 		$(this).val('');
+		// 		$('#days-count').val('');
+		// 	});
+		// });
+		$(function () {
+			$('input[name="datefilter"]').daterangepicker({
+				autoUpdateInput: false,
+				locale: {
+					format: 'DD/MM/YYYY'
+				},
+				minDate: moment().startOf('day'),
+				autoApply: true, // Automatically apply the date range
+				applyButtonClasses: 'd-none', // Hide the apply button
+				cancelButtonClasses: 'd-none', // Hide the cancel button
+			});
+
+			function countWeekdays(startDate, endDate) {
+				var day = startDate.clone();
+				var weekdaysCount = 0;
+
+				while (day <= endDate) {
+					if (day.day() !== 6 && day.day() !== 0) { // Exclude Saturdays (6) and Sundays (0)
+						weekdaysCount++;
+					}
+					day.add(1, 'days');
+				}
+
+				return weekdaysCount;
+			}
+
+			$('input[name="datefilter"]').on('apply.daterangepicker', function (ev, picker) {
+				$('#startDate').val(picker.startDate.format('YYYY-MM-DD'));
+				$('#endDate').val(picker.endDate.format('YYYY-MM-DD'));
+				$(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+
+				var dayDifference = countWeekdays(picker.startDate, picker.endDate);
+				$('#days-count').val(dayDifference);
+			});
+
+			// Automatically trigger apply event when end date is selected
+			$('input[name="datefilter"]').on('hide.daterangepicker', function (ev, picker) {
+				$('#startDate').val(picker.startDate.format('YYYY-MM-DD'));
+				$('#endDate').val(picker.endDate.format('YYYY-MM-DD'));
+				$(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+
+				var dayDifference = countWeekdays(picker.startDate, picker.endDate);
+				$('#days-count').val(dayDifference);
+			});
+
+			$('input[name="datefilter"]').on('cancel.daterangepicker', function (ev, picker) {
+				$('#startDate').val('');
+				$('#endDate').val('');
+				$(this).val('');
+				$('#days-count').val('');
+			});
+		});
+
+
+
+
+	</script>
+
+
+</body>
+
+</html>

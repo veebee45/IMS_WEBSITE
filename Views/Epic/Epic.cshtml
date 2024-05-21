@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>EPIC</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/css/Epic.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .card {
+            width: 20em;
+            height: 90%;
+            background-color: #ffff;
+            border-radius: 2em;
+            box-shadow: 0 0 2em rgba(0,0,0,.2);
+            padding: 2em 1em;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin: 0 2em;
+        }
+
+
+        .card_image {
+            width: 10em;
+            height: 10em;
+            border-radius: 50%;
+            border: 5px solid #9698c5;
+            padding: 3px;
+            margin-bottom: 2em;
+        }
+
+            .card_image img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+        .card_content {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .card_title {
+            font-size: 1.5em;
+            font-weight: 500;
+            position: relative;
+            top: .2em;
+        }
+
+        .card_name {
+            color: #9698c5;
+        }
+
+        .card_text {
+            text-align: center;
+            font-size: 1.1em;
+            margin: 1em 0;
+        }
+
+        .card_btn {
+            background-color: #9698c5;
+            color: #ffff;
+            font-size: 1rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            border: none;
+            padding: .5em;
+            border-radius: .5em;
+            margin-top: .5em;
+            cursor: pointer;
+        }
+
+            .card_btn:hover {
+                color: black;
+            }
+       
+    </style>
+</head>
+<body>
+    <section class="swiper mySwiper">
+        <div class="swiper-wrapper">
+            <div class="card swiper-slide">
+                <div class="card_image">
+                    <img src="/Images/Tamilnadu.jpg" />
+                </div>
+                <div class="card_content">
+                    <span class="card_title">TAMILNADU</span>
+                    <span class="card_name">EPIC</span>
+                    <p class="card_text">Experience EPIC CARDS automation for Tamil Nadu. Elevate your workflow instantly!</p>
+                    <button class="card_btn" data-value="1">Run EXE</button>
+                </div>
+            </div>
+            <div class="card swiper-slide">
+                <div class="card_image">
+                    <img src="/Images/Tamilnadu.jpg" />
+                </div>
+                <div class="card_content">
+                    <span class="card_title">TAMILNADU</span>
+                    <span class="card_name">EPIC REMAKE</span>
+                    <p class="card_text"> Missed some cards? No worries, we've got you covered with our remake feature.</p>
+                    <button class="card_btn" data-value="2">Run EXE</button>
+                </div>
+            </div>
+            <div class="card swiper-slide">
+                <div class="card_image">
+                    <img src="/Images/Kashmir.jpg" />
+                </div>
+                <div class="card_content">
+                    <span class="card_title">KASHMIR</span>
+                    <span class="card_name">EPIC</span>
+                    <p class="card_text">Experience EPIC CARDS automation for Kashmir. Elevate your workflow instantly!</p>
+                    <button class="card_btn" data-value="3">Run EXE</button>
+                </div>
+            </div>
+            <div class="card swiper-slide">
+                <div class="card_image">
+                    <img src="/Images/Kashmir.jpg" />
+                </div>
+                <div class="card_content">
+                    <span class="card_title">KASHMIR</span>
+                    <span class="card_name">EPIC REMAKE</span>
+                    <p class="card_text"> Missed some cards? No worries, we've got you covered with our remake feature.</p>
+                    <button class="card_btn" data-value="4">Run EXE</button>
+                </div>
+            </div>
+            <div class="card swiper-slide">
+                <div class="card_image">
+                    <img src="/Images/Gujrat.jpg" />
+                </div>
+                <div class="card_content">
+                    <span class="card_title">GUJRAT</span>
+                    <span class="card_name">EPIC</span>
+                    <p class="card_text">Experience EPIC CARDS automation for Gujrat. Elevate your workflow instantly!.</p>
+                    <button class="card_btn" data-value="5">Run EXE</button>
+                </div>
+            </div>
+            <div class="card swiper-slide">
+                <div class="card_image">
+                    <img src="/Images/Gujrat.jpg" />
+                </div>
+                <div class="card_content">
+                    <span class="card_title">GUJRAT</span>
+                    <span class="card_name">EPIC REMAKE</span>
+                    <p class="card_text"> Missed some cards? No worries, we've got you covered with our remake feature.</p>
+                    <button class="card_btn" data-value="6">Run EXE</button>
+                </div>
+            </div>
+        </div>
+        <br />
+        <div class="swiper-pagination"></div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="~/js/Epic.js"></script>
+
+
+</body>
+</html>
