@@ -1,0 +1,548 @@
+﻿@using System.Data
+@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" href="~/css/Tasks.css">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<title>Tasks</title>
+
+	<style>
+		.table th,
+		.table td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.table th {
+			background-color: #f2f2f2;
+			font-weight: bold;
+			color: #795D83;
+			font-size: 15px;
+			cursor: pointer;
+		}
+
+		.filters {
+			text-decoration: none;
+			font-size: 15px;
+			font-weight: 600;
+			color: #795D83;
+			cursor: pointer;
+		}
+
+		.table td {
+			font-size: 15px;
+			color: #262626;
+			font-weight: 500;
+		}
+
+		.table a {
+			text-decoration: none;
+			color: #262626;
+			transition: color 0.3s;
+		}
+
+			.table a:hover {
+				text-decoration: underline;
+			}
+
+		.table .projectid:hover {
+			text-decoration: underline;
+			color: #0040c9;
+		}
+
+		.table tbody tr td span {
+			border: 1px solid #795D83;
+			color: #fff;
+			border-radius: 3px;
+			font-size: 12px;
+			padding: 0px 3px;
+			background-color: #795D83;
+			margin-right: 7px;
+			font-weight: 600;
+		}
+
+		.pagination {
+			margin-top: 20px;
+		}
+
+			.pagination .page-item .page-link {
+				color: #795D83;
+			}
+
+			.pagination .page-item.active .page-link {
+				background-color: #795D83;
+				border-color: #795D83;
+				color: #fff;
+			}
+
+			.pagination .page-link {
+				padding: 6px 12px;
+				border: 1px solid #dee2e6;
+				margin-left: -1px;
+				line-height: 1.5;
+				background-color: #fff;
+				border: 1px solid #dee2e6;
+				color: #795D83;
+			}
+
+				.pagination .page-link:hover {
+					background-color: #f2f2f2;
+				}
+
+		#myModal {
+			display: none;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 70%;
+			max-width: 500px;
+			z-index: 9999;
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			padding: 20px;
+			border: 1px solid #888;
+			border-radius: 5px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.modal-footer {
+			padding: 10px;
+		}
+
+		.modal-title {
+			margin-top: 0;
+		}
+
+
+		.modal-body {
+			padding: 10px;
+			padding-bottom: 20px;
+			overflow-x: hidden;
+		}
+
+		.form-group {
+			max-width: 300px;
+			margin-right: auto;
+		}
+
+		.form-control {
+			margin-top: 5px;
+		}
+
+			.form-control:focus {
+				box-shadow: none;
+			}
+
+		.close {
+			float: right;
+		}
+
+			.close:focus {
+				box-shadow: none;
+				border: none;
+				outline: none;
+			}
+
+		input[type=number]::-webkit-inner-spin-button,
+		input[type=number]::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		/* Hide the input arrow in IE 10 and IE 11 */
+		input[type=number] {
+			-moz-appearance: textfield;
+		}
+
+
+	</style>
+
+</head>
+
+<body>
+
+	<div class="card" style="margin-top:10px;">
+		<div class="card-head" style="border-bottom:1px solid gray;">
+
+			<div class="row">
+				<div class="col-3">
+					<label style="position:relative; font-size:24px; margin-left:20px;font-weight: bold;"><i class="ri-square-fill" style="border:1px solid black; margin-right:7px; font-size:20px;"></i>  Tasks</label>
+				</div>
+				<div class="col-9" style="text-align:end;">
+					<a href="/Tasks/DeletedTasks" class="task"><i class="bi bi-trash" style="margin-right:3px;"></i>Task Bin</a>
+					<a href="/Tasks/AddTask" class="task"><i class="bi bi-plus"></i> New Task</a>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+
+			<nav style="margin-bottom:0px;">
+				<div class="d-flex justify-content-between">
+					<div class="row">
+						<div class="col-1"></div>
+						<div class="col-1"></div>
+
+					</div>
+					
+					
+				</div>
+			</nav>
+			<div class="tab-content" id="nav-tabContent">
+				<div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab" tabindex="0">
+					<table class="table table-hover" id="allTable">
+						<thead class="table-head-hover">
+							<tr>
+								<th>Task</th>
+								<th>Type</th>
+								<th>Summary</th>
+								<th>Priority</th>
+								<th>Status</th>
+								<th>Assignee</th>
+								<th>Start Date</th>
+								<th>Completion Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (DataRow row in Model.Rows)
+							{
+								<tr>
+									<td>
+										@if (row["Status"].ToString() == "Done")
+										{
+											<span>@row["ProjectID"].ToString().Substring(0, 1)</span>
+											<a href="@Url.Action("Details", "Tasks", new { id = row["ProjectID"] })">
+												<strike>@row["ProjectID"]</strike>
+											</a>
+										}
+										else
+										{
+											<span>@row["ProjectID"].ToString().Substring(0, 1)</span>
+											<a class="projectid" href="@Url.Action("Details", "Tasks", new { id = row["ProjectID"] })">
+												@row["ProjectID"]
+											</a>
+										}
+									</td>
+									<td>@row["Type"]</td>
+									<td>@row["Summary"]</td>
+									<td>@row["Priority"]</td>
+									<td>@row["Status"]</td>
+									<td>@row["Assignee"]</td>
+									<td>@Convert.ToDateTime(row["Created"]).ToString("dd-MMM-yyyy")</td>
+									<td>
+										@if (row["CompletionDate"] != DBNull.Value)
+										{
+											@Convert.ToDateTime(row["CompletionDate"]).ToString("dd-MMM-yyyy")
+										}
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+
+				</div>
+				<div class="tab-pane fade" id="nav-me" role="tabpanel" aria-labelledby="nav-me-tab" tabindex="0">
+					<table class="table table-hover" id="meTable">
+						<thead class="table-head-hover">
+							<tr>
+								<th>Task</th>
+								<th>Type</th>
+								<th>Summary</th>
+								<th>Priority</th>
+								<th>Status</th>
+								<th>Assignee</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (DataRow row in Model.Rows)
+							{
+								if (row["Assignee"].ToString() == @Context.Session.GetString("UserName"))
+								{
+									<tr>
+										<td>
+											@if (row["Status"].ToString() == "Done")
+											{
+												<span>@row["ProjectID"].ToString().Substring(0, 1)</span>
+												<a href="@Url.Action("Details", "Tasks", new { id = row["ProjectID"] })">
+													<strike>@row["ProjectID"]</strike>
+												</a>
+											}
+											else
+											{
+												<span>@row["ProjectID"].ToString().Substring(0, 1)</span>
+												<a class="projectid" href="@Url.Action("Details", "Tasks", new { id = row["ProjectID"] })">
+													@row["ProjectID"]
+												</a>
+											}
+										</td>
+										<td>@row["Type"]</td>
+										<td>@row["Summary"]</td>
+										<td>@row["Priority"]</td>
+										<td>@row["Status"]</td>
+										<td>@row["Assignee"]</td>
+										<td>@Convert.ToDateTime(row["Created"]).ToString("dd-MMM-yyyy")</td>
+										<td>@Convert.ToDateTime(row["EndDate"]).ToString("dd-MMM-yyyy")</td>
+									</tr>
+								}
+							}
+						</tbody>
+					</table>
+
+				</div>
+				<ul class="pagination justify-content-end">
+					@for (int i = 1; i <= ViewBag.PageCount; i++)
+					{
+						<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+							<a class="page-link" href="@Url.Action("Tasks", "Tasks", new { page = i, pageSize = 10 })">@i</a>
+						</li>
+					}
+				</ul>
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+
+	@if (TempData["Status"] != null)
+	{
+
+		<form id="myForm">
+			<div id="myModal" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header" style="border-bottom:1px solid gray; display: flex; justify-content: space-between;">
+						<h3>Data count for @TempData["ProjectID"]</h3>
+						<button type="button" class="btn close" data-dismiss="modal" style="margin-top:-20px; margin-right:-20px;"><i class="bi bi-x-square-fill" style="font-size:24px; color:#FC0606"></i></button>
+					</div>
+					<div class="modal-body">
+
+
+						<div class="row mt-2">
+							<div class="col">
+								<div class="form-group">
+									<label for="processedData">Processed Data Count</label>
+									<input type="number" class="form-control" id="processedData" required inputmode="numeric">
+								</div>
+							</div>
+						</div>
+						<div class="row mt-2">
+							<div class="col">
+								<div class="form-group">
+									<label for="rejectedData">Rejected Data Count</label>
+									<input type="number" class="form-control" id="rejectedData" required inputmode="numeric">
+								</div>
+							</div>
+						</div>
+
+						<div class="row mt-2">
+							<div class="col">
+								<div class="form-group">
+									<label for="statename">State</label>
+									<select class="form-control" id="state-dropdown" required>
+										
+									</select>
+								</div>
+							</div>
+						</div>
+						
+
+						
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="submitBtn">OK</button>
+					</div>
+				</div>
+			</div>
+		</form>
+
+
+
+
+	}
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+	<script>
+		document.getElementById("settings").addEventListener("click", function () {
+			var dropdownMenu = document.getElementById("dropdownMenu");
+			if (dropdownMenu.style.display === "none") {
+				dropdownMenu.style.display = "block";
+			} else {
+				dropdownMenu.style.display = "none";
+			}
+		});
+	</script>
+	<script>
+		// Array containing all states and union territories
+		var states = [
+			"Andaman and Nicobar Islands",
+			"Andhra Pradesh",
+			"Arunachal Pradesh",
+			"Assam",
+			"Bihar",
+			"Chhattisgarh",
+			"Chandigarh",
+			"Daman and Diu",
+			"Delhi",
+			"Dadra and Nagar Haveli",
+			"Goa",
+			"Gujarat",
+			"Himachal Pradesh",
+			"Haryana",
+			"Jammu and Kashmir",
+			"Jharkhand",
+			"Kerala",
+			"Karnataka",
+			"Lakshadweep",
+			"Meghalaya",
+			"Maharashtra",
+			"Manipur",
+			"Madhya Pradesh",
+			"Mizoram",
+			"Nagaland",
+			"Odisha",
+			"Punjab",
+			"Puducherry",
+			"Rajasthan",
+			"Sikkim",
+			"Tamil Nadu",
+			"Tripura",
+			"Uttarakhand",
+			"Uttar Pradesh",
+			"West Bengal",
+			"Telangana",
+			"Ladakh"
+			// Add more states and union territories as needed
+		];
+
+		// Function to populate the dropdown with options
+		function populateDropdown() {
+			var select = document.getElementById("state-dropdown");
+
+			// Clear existing options
+			select.innerHTML = "";
+
+			// Add default option
+			var defaultOption = document.createElement("option");
+			defaultOption.text = "Select State";
+			defaultOption.value = "";
+			select.appendChild(defaultOption);
+
+			// Add options for each state
+			states.forEach(function (state) {
+				var option = document.createElement("option");
+				option.text = state;
+				option.value = state;
+				select.appendChild(option);
+			});
+		}
+
+		// Call the function to populate the dropdown when the page loads
+		populateDropdown();
+	</script>
+	<script>
+		$(document).ready(function () {
+			$("#submitBtn").click(function (event) {
+				event.preventDefault(); // Prevent form submission
+
+				// Reset previous error messages
+				$(".error-message").remove();
+
+				// Get values of input fields
+				var processedData = $("#processedData").val();
+				var rejectedData = $("#rejectedData").val();
+				var project = "@TempData["Project"]";
+				var projectID = "@TempData["ProjectID"]";
+				var assignee = "@TempData["Assignee"]";
+				var selectedState = $("#state-dropdown").val();
+
+				// Flag to check if form is valid
+				var isValid = true;
+
+				// Validate each input field
+				if (processedData.trim() === "") {
+					$("#processedData").after('<p class="error-message" style="color: red;">Enter processed data count</p>');
+					isValid = false;
+				}
+				if (rejectedData.trim() === "") {
+					$("#rejectedData").after('<p class="error-message" style="color: red;">Enter rejected data count</p>');
+					isValid = false;
+				}
+
+
+				// If form is not valid, prevent form submission
+				if (!isValid) {
+					return false;
+				}
+
+				// If form is valid, proceed with AJAX request
+				$.ajax({
+					url: "/Tasks/InsertFormData",
+					type: "POST",
+					dataType: "json",
+					data: {
+						processedData: processedData,
+						rejectedData: rejectedData,
+						project: project,
+						projectID: projectID,
+						assignee: assignee,
+						state: selectedState
+					},
+					success: function (response) {
+						if (response.success) {
+							// Handle success scenario
+							alert("Data inserted successfully!");
+							$('#myForm')[0].reset();
+							$('#myModal').find('.close').click(); // Close the modal by simulating click on close button
+						} else {
+							// Handle failure scenario
+							alert("Failed to insert data into the database.");
+						}
+					},
+					error: function (xhr, status, error) {
+						// Handle AJAX errors
+						alert("An error occurred while processing your request.");
+					}
+				});
+			});
+		});
+	</script>
+	<script>
+		var modal = document.getElementById("myModal");
+		var closeButton = document.querySelector(".modal-header button.close");
+
+		window.onload = function () {
+			modal.style.display = "block";
+		};
+
+		closeButton.addEventListener("click", function () {
+			modal.style.display = "none";
+		});
+
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.style.display = "block";
+			}
+		};
+	</script>
+
+	
+
+
+</body>
+
+</html>

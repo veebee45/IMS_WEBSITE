@@ -1,0 +1,95 @@
+body {
+    background-image: radial-gradient(circle,rgb(170, 31, 224),rgb(235, 157, 13));
+    overflow-y: hidden;
+    font-family: "Solway", serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+.box-area {
+    width: 60%;
+    height: 60%;
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.login-form {
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    margin: auto;
+}
+p {
+    margin-bottom: 20px;
+}
+.floating-label-group {
+    position: relative;
+    margin-top: 15px;
+    margin-bottom: 30px;
+}
+.floating-label
+{
+    font-size: 13px;
+    color: #cccccc;
+    position: absolute;
+    pointer-events: none;
+    top: 9px;
+    left: 12px;
+    transition: all 0.1s ease;
+}
+
+input:focus ~ .floating-label,
+input:not(:focus):valid ~ .floating-label {
+    top: -25px;
+    bottom: 0px;
+    left: 0px;
+    font-size: 15px;
+    opacity: 1;
+    color: #404040;
+
+}
+
+.form-control:focus{
+    box-shadow:none;
+}
+
+.btn {
+    width: 100%;
+}
+
+
+@media screen and (max-width: 1280px) {
+
+    .box-area {
+        width: 60%;
+        height: 60%;
+        border-radius: 15px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+}
+
+@media all and (min-width: 1024px) and (max-width: 1280px) {
+
+    .box-area {
+        width: 70%;
+        height: 60%;
+        border-radius: 15px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+}
+
+
+
+
+@media screen (min-width: 764){
+    .box-area {
+        width: 50%;
+        height: auto;
+        border-radius: 15px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+    .left-box{
+        display:none;
+    }
+}

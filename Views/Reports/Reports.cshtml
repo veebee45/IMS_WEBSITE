@@ -1,0 +1,80 @@
+﻿@model List<IMSMIS.Models.Data>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Project Total Counts Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="projectCountsChart" width="400" height="200"></canvas>
+
+    <script>
+        // Retrieve data from model
+        var projects = [];
+        var totalCounts = [];
+        @foreach (var item in Model)
+        {
+            <text>projects.push('@item.Project');</text>
+            <text>totalCounts.push('@item.totaldata');</text>
+        }
+
+        // Create the chart
+        var ctx = document.getElementById('projectCountsChart').getContext('2d');
+        var projectCountsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: projects,
+                datasets: [{
+                    label: 'Total Counts',
+                    data: totalCounts,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)', // Blue color with opacity
+                    borderColor: 'rgba(54, 162, 235, 1)', // Solid blue border
+                    borderWidth: 1
+                }]
+            },
+           options: {
+                interaction: {
+                    mode: 'index',
+                    intersect: true,
+                },
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        ticks: {
+                            color: 'black',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: 'black',
+                            font: {
+                                weight: 'bold'
+                            }
+                        },
+                        grid: {
+                            display: false 
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'black',
+                            font: {
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
