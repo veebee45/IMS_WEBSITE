@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("IMSMIS")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4580c30a155898e249718fddcdd253bf256f0645")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+28ba5ed8e9916d83e3084c65d92f01e7346a844e")]
 [assembly: System.Reflection.AssemblyProductAttribute("IMSMIS")]
 [assembly: System.Reflection.AssemblyTitleAttribute("IMSMIS")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

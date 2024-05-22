@@ -1,1 +1,224 @@
-﻿<h1>Dashboard</h1>
+﻿<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+<section class="stat-icons-wrapper">
+    <div class="stat-icons">
+        <div class="rectangle-parent">
+            <div class="frame-child"></div>
+            <img class="raphaelusers-icon"
+                 loading="lazy"
+                 alt=""
+                 src="~/images/raphaelusers.svg" />
+
+            <div class="metric-labels">
+                <b class="total-users">Total Users</b>
+                <b class="delimiter">10</b>
+            </div>
+        </div>
+        <div class="rectangle-group">
+            <div class="frame-item"></div>
+            <div class="project-names">
+                <img class="octiconproject-roadmap-16"
+                     alt=""
+                     src="~/images/octiconprojectroadmap16.svg" />
+            </div>
+            <div class="total-projects-parent">
+                <b class="total-projects">Total Projects</b>
+                <b class="b">10</b>
+            </div>
+        </div>
+        <div class="rectangle-container">
+            <div class="frame-inner"></div>
+            <img class="mdireport-box-icon1"
+                 alt=""
+                 src="~/images/mdireportbox-1.svg" />
+
+            <div class="projects1">
+                <div class="total-tasks-parent">
+                    <b class="total-tasks">Total Tasks</b>
+                    <b class="stat-separator">10</b>
+                </div>
+            </div>
+        </div>
+        <div class="frame-div">
+            <div class="rectangle-div"></div>
+            <img class="streamlinestrategy-tasks-soli-icon"
+                 alt=""
+                 src="~/images/streamlinestrategytaskssolid.svg" />
+
+            <div class="details">
+                <b class="critical-tasks">Critical Tasks</b>
+                <b class="b1">10</b>
+            </div>
+        </div>
+        <div class="rectangle-parent1">
+            <div class="frame-child1"></div>
+            <img class="mdireport-box-icon2"
+                 alt=""
+                 src="~/images/mdireportbox-1.svg" />
+
+            <div class="stat-name">
+                <b class="open-tasks">Open Tasks</b>
+                <b class="b2">10</b>
+            </div>
+        </div>
+        <div class="rectangle-parent2">
+            <div class="frame-child2"></div>
+            <img class="mdireport-box-icon3"
+                 alt=""
+                 src="~/images/mdireportbox-1.svg" />
+
+            <div class="closed-tasks-parent">
+                <b class="closed-tasks">Closed Tasks</b>
+                <b class="b3">10</b>
+            </div>
+        </div>
+        <div class="rectangle-parent3">
+            <div class="frame-child3"></div>
+            <img class="mdireport-box-icon4"
+                 alt=""
+                 src="~/images/mdireportbox-1.svg" />
+
+            <div class="project-data">
+                <div class="to-verify-tasks-parent">
+                    <b class="to-verify-tasks">To Verify Tasks</b>
+                    <b class="b4">10</b>
+                </div>
+            </div>
+        </div>
+        <div class="rectangle-parent4">
+            <div class="frame-child4"></div>
+            <img class="mdireport-box-icon5"
+                 alt=""
+                 src="~/images/mdireportbox-1.svg" />
+
+            <div class="show-stopper-parent">
+                <b class="show-stopper">Show Stopper</b>
+                <b class="b5">10</b>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="user-task-details">
+    <div class="task-table">
+        <div class="task-table-header">
+            <div class="table-columns">
+                <div class="user-data-parent">
+
+                    <table>
+                        <tr>
+                            <td colspan="4" class="merged arrow">
+                                <b>Task Assigning Users Wise Details</b>
+                                <img src="~/Images/makiarrow.svg" alt="Arrow" width="20" height="20">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Total Tasks</th>
+                            <th>Pending Tasks</th>
+                            <th>Done Tasks</th>
+                        </tr>
+                        <tr>
+                            <td>Rupesh Sharma</td>
+                            <td><a href="#">15</a></td>
+                            <td><a href="#">5</a></td>
+                            <td><a href="#">10</a></td>
+                        </tr>
+                        <tr>
+                            <td>Rajeev Jadaun</td>
+                            <td><a href="#">15</a></td>
+                            <td><a href="#">5</a></td>
+                            <td><a href="#">10</a></td>
+                        </tr>
+ 
+                    </table>
+                    
+                </div>
+            </div>
+            <div class="table-columns1">
+                <div class="frame-parent">
+                    
+                    <table>
+                        <tr>
+                            <td colspan="4" class="merged arrow">
+                                <b>Project Wise Data Summary</b>
+                                <img src="~/Images/makiarrow.svg" alt="Arrow" width="20" height="20">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Total Data Received</th>
+                            <th>Total Rejected Data</th>
+                            <th>Total Processed Data</th>
+                        </tr>
+                        <tr>
+                            <td>NHA-Bihar</td>
+                            <td><a href="#">1,50,000</a></td>
+                            <td><a href="#">50,000</a></td>
+                            <td><a href="#">1,00,000</a></td>
+                        </tr>
+                        <tr>
+                            <td>Disability</td>
+                            <td><a href="#">1,50,000</a></td>
+                            <td><a href="#">50,000</a></td>
+                            <td><a href="#">1,00,000</a></td>
+                        </tr>
+
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        <div class="project-data1">
+            <div class="project-data-child"></div>
+            <div class="data-summary2">
+                <b class="frequently-received-projects">Frequently Received Projects Data</b>
+            </div>
+            <canvas id="myPieChart"></canvas>
+        </div>
+    </div>
+</section>
+<script>
+    const ctx = document.getElementById('myPieChart').getContext('2d');
+    const data = {
+        labels: ['NHA', 'Disability', 'RGPV'],
+        datasets: [{
+            label: 'Data Count',
+            data: [300, 50, 100],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)',
+                'rgb(255, 205, 86)'
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    const config = {
+        type: 'pie',
+        data: data,
+        options: {
+            plugins: {
+                legend: {
+                    display: false // Hide the legend
+                },
+                datalabels: {
+                    formatter: (value, context) => {
+                        const sum = context.chart._metasets[0].total;
+                        const percentage = (value / sum * 100).toFixed(2) + '%';
+                        const label = context.chart.data.labels[context.dataIndex];
+                        return label + '\n' + percentage;
+                    },
+                    color: '#fff',
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    };
+
+    const myPieChart = new Chart(ctx, config);
+</script>

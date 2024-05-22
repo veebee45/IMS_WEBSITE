@@ -1,0 +1,45 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "E:\\Test\\Testing\\Test\\IMS_WEBSITE\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{2F6B82AD-D3FE-4D23-BAEC-5DAEC9E4536C}|IMSMIS.csproj|e:\\test\\testing\\test\\ims_website\\views\\dashboard\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{2F6B82AD-D3FE-4D23-BAEC-5DAEC9E4536C}|IMSMIS.csproj|solutionrelative:views\\dashboard\\dashboard.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Dashboard.cshtml",
+              "DocumentMoniker": "E:\\Test\\Testing\\Test\\IMS_WEBSITE\\Views\\Dashboard\\Dashboard.cshtml",
+              "RelativeDocumentMoniker": "Views\\Dashboard\\Dashboard.cshtml",
+              "ToolTip": "E:\\Test\\Testing\\Test\\IMS_WEBSITE\\Views\\Dashboard\\Dashboard.cshtml",
+              "RelativeToolTip": "Views\\Dashboard\\Dashboard.cshtml",
+              "ViewState": "AQIAAKgAAAAAAAAAAAAAAGkAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-05-22T12:46:51.693Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

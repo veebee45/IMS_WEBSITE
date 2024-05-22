@@ -173,3 +173,14 @@ E:\Test\Testing\Test\IMS_WEBSITE\obj\Debug\net6.0\refint\IMSMIS.dll
 E:\Test\Testing\Test\IMS_WEBSITE\obj\Debug\net6.0\IMSMIS.pdb
 E:\Test\Testing\Test\IMS_WEBSITE\obj\Debug\net6.0\IMSMIS.genruntimeconfig.cache
 E:\Test\Testing\Test\IMS_WEBSITE\obj\Debug\net6.0\ref\IMSMIS.dll
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\bifiletypeexe.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\fasolidusers.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\group.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\makiarrow.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\materialsymbolsdashboard.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\mdireportbox.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\mdireportbox-1.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\mingcutetask2fill.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\octiconprojectroadmap16.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\raphaelusers.svg
+E:\Test\Testing\Test\IMS_WEBSITE\bin\Debug\net6.0\wwwroot\Images\streamlinestrategytaskssolid.svg
