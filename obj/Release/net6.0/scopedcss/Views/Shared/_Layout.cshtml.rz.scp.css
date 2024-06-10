@@ -1,0 +1,200 @@
+.sidebar[b-17fbvsslgv] {
+    width: 15%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background: linear-gradient(to bottom, #e2e3ff, #f2f2f8);
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+    .sidebar ul[b-17fbvsslgv] {
+        list-style-type: none;
+        padding: 0;
+    }
+
+        .sidebar ul li[b-17fbvsslgv] {
+            padding: 5px;
+        }
+
+            .sidebar ul li a[b-17fbvsslgv] {
+                text-decoration: none;
+                color: black;
+                font-size: 18px;
+                font-family: 'Solway', sans-serif;
+                font-weight: 500;
+            }
+
+                .sidebar ul li a i[b-17fbvsslgv] {
+                    margin-right: 10px;
+                }
+
+                .sidebar ul li a.active-link[b-17fbvsslgv] {
+                    background-color: #A5B7F6;
+                    color: black;
+                    font-weight: 900;
+                }
+notificationBadge
+.active-link[b-17fbvsslgv] {
+    border: 1px solid #fff;
+    background-color: #A5B7F6;
+    padding: 8px 20px;
+    border-radius: 5px;
+}
+
+
+.content[b-17fbvsslgv] {
+    margin-left: 15%;
+    width: calc(85%);
+    box-sizing: border-box;
+    font-family: 'Solway', sans-serif;
+}
+
+nav[b-17fbvsslgv] {
+    height: 100px;
+    width: 100%;
+}
+
+label.logo[b-17fbvsslgv] {
+    color: black;
+    font-size: 35px;
+    line-height: 80px;
+    padding: 0 20px;
+    font-weight: bold;
+}
+
+
+
+[b-17fbvsslgv]::-webkit-scrollbar {
+    width: 8px;
+}
+
+[b-17fbvsslgv]::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+[b-17fbvsslgv]::-webkit-scrollbar-thumb {
+    background-color: #D8B2F0;
+    border-radius: 10px;
+}
+
+    [b-17fbvsslgv]::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+
+#user-initial[b-17fbvsslgv] {
+    border: 1px solid gray;
+    padding: 8px;
+    border-radius: 10px;
+    background-color: #7986CB;
+    color: #fff;
+}
+
+.notification-drop[b-17fbvsslgv] {
+    font-family: 'Solway', sans-serif;
+    color: #444;
+}
+
+    .notification-drop .item[b-17fbvsslgv] {
+        padding: 10px;
+        font-size: 18px;
+        position: relative;
+        border-bottom: none;
+    }
+
+        .notification-drop .item:hover[b-17fbvsslgv] {
+            cursor: pointer;
+        }
+
+        .notification-drop .item i[b-17fbvsslgv] {
+            margin-left: 10px;
+        }
+
+        .notification-drop .item ul[b-17fbvsslgv] {
+            display: none;
+            position: absolute;
+            top: 100%;
+            background: #fff;
+            left: -200px;
+            right: 0;
+            z-index: 1;
+            border: 1px solid gray;
+            max-height: 250px;
+            border-radius: 5px;
+            overflow-y: auto;
+        }
+
+            .notification-drop .item ul[b-17fbvsslgv]::-webkit-scrollbar {
+                width: 3px;
+            }
+
+            .notification-drop .item ul[b-17fbvsslgv]::-webkit-scrollbar-track {
+                background: #fff;
+            }
+
+            .notification-drop .item ul[b-17fbvsslgv]::-webkit-scrollbar-thumb {
+                background: #5C6BC0;
+                border-radius: 5px;
+            }
+
+                .notification-drop .item ul[b-17fbvsslgv]::-webkit-scrollbar-thumb:hover {
+                    background: #555;
+                }
+
+
+
+            .notification-drop .item ul li:hover[b-17fbvsslgv] {
+                background: #ddd;
+                color: rgba(0, 0, 0, 0.8);
+            }
+
+/*#projectList {
+    padding: 0;
+    margin: 0;
+}
+
+    #projectList li {
+        cursor: pointer;
+        background-color: #fff;
+        font-size: 16px;
+        padding: 15px 0 15px 15px;
+        list-style: circle;
+    }
+
+        #projectList li.highlighted {
+            color: #34495E;
+            background-color: #D6EAF8;
+            list-style: circle;
+            padding-left: 20px;
+        }*/
+
+.notification-text[b-17fbvsslgv] {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+    .notification-text span[b-17fbvsslgv] {
+        float: right;
+    }
+
+.notification-bell[b-17fbvsslgv] {
+    height: 35px;
+    width: 35px;
+}
+
+
+.btn__badge[b-17fbvsslgv] {
+    background: #FF5D5D;
+    color: white;
+    font-size: 10px;
+    position: absolute;
+    top: 2px;
+    right: -2px;
+    padding: 1px 5px;
+    border-radius: 50%;
+}
+
+br[b-17fbvsslgv] {
+    line-height: 2px;
+}

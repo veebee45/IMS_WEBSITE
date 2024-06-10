@@ -1,0 +1,1042 @@
+﻿@using System.Data
+@using Microsoft.AspNetCore.Http
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" href="~/css/Tasks.css">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+	<title>Task List</title>
+	<style>
+		.pagination .page-item.disabled .page-link {
+			color: #6c757d;
+			pointer-events: none;
+			cursor: not-allowed;
+		}
+
+		.pagination .page-item.active .page-link {
+			z-index: 1;
+			color: #fff;
+			background-color: #007bff;
+			border-color: #007bff;
+		}
+
+		.pagination .page-link {
+			position: relative;
+			display: block;
+			padding: 0.5rem 0.75rem;
+			margin-left: -1px;
+			line-height: 1.25;
+			color: #007bff;
+			background-color: #fff;
+			border: 1px solid #dee2e6;
+		}
+
+			.pagination .page-link:hover {
+				z-index: 2;
+				color: #0056b3;
+				text-decoration: none;
+				background-color: #e9ecef;
+				border-color: #dee2e6;
+			}
+	</style>
+	<style>
+		.table th,
+		.table td {
+			padding: 8px;
+			text-align: left;
+			border-bottom: 1px solid #ddd;
+		}
+
+		.table th {
+			background-color: #f2f2f2;
+			font-weight: bold;
+			color: #795D83;
+			font-size: 15px;
+			cursor: pointer;
+		}
+
+		.filters {
+			text-decoration: none;
+			font-size: 15px;
+			font-weight: 600;
+			color: #795D83;
+			cursor: pointer;
+		}
+
+		.table td {
+			font-size: 15px;
+			color: #262626;
+			font-weight: 500;
+		}
+
+		.table a {
+			text-decoration: none;
+			color: #262626;
+			transition: color 0.3s;
+		}
+
+			.table a:hover {
+				text-decoration: underline;
+			}
+
+		.table .projectid:hover {
+			text-decoration: underline;
+			color: #0040c9;
+		}
+
+		.table tbody tr td span {
+			border: 1px solid #795D83;
+			color: #fff;
+			border-radius: 3px;
+			font-size: 12px;
+			padding: 0px 3px;
+			background-color: #795D83;
+			margin-right: 7px;
+			font-weight: 600;
+		}
+
+		.pagination {
+			margin-top: 20px;
+		}
+
+			.pagination .page-item .page-link {
+				color: #795D83;
+			}
+
+			.pagination .page-item.active .page-link {
+				background-color: #795D83;
+				border-color: #795D83;
+				color: #fff;
+			}
+
+			.pagination .page-link {
+				padding: 6px 12px;
+				border: 1px solid #dee2e6;
+				margin-left: -1px;
+				line-height: 1.5;
+				background-color: #fff;
+				border: 1px solid #dee2e6;
+				color: #795D83;
+			}
+
+				.pagination .page-link:hover {
+					background-color: #f2f2f2;
+				}
+
+		#myModal {
+			display: none;
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 70%;
+			max-width: 500px;
+			z-index: 9999;
+		}
+
+		.modal-content {
+			background-color: #fefefe;
+			padding: 20px;
+			border: 1px solid #888;
+			border-radius: 5px;
+			box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+		}
+
+		.modal-footer {
+			padding: 10px;
+		}
+
+		.modal-title {
+			margin-top: 0;
+		}
+
+
+		.modal-body {
+			padding: 10px;
+			padding-bottom: 20px;
+			overflow-x: hidden;
+		}
+
+		.form-group {
+			max-width: 300px;
+			margin-right: auto;
+		}
+
+		.form-control {
+			margin-top: 5px;
+		}
+
+			.form-control:focus {
+				box-shadow: none;
+			}
+
+		.close {
+			float: right;
+		}
+
+			.close:focus {
+				box-shadow: none;
+				border: none;
+				outline: none;
+			}
+
+		input[type=number]::-webkit-inner-spin-button,
+		input[type=number]::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+
+		/* Hide the input arrow in IE 10 and IE 11 */
+		input[type=number] {
+			-moz-appearance: textfield;
+		}
+
+		.dropbtn {
+			background-color: #fff;
+			color: black;
+			padding: 4px 6px;
+			text-align: center;
+			font-size: 15px;
+			font-weight: 600;
+			border: 1px solid gray;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			border-radius: 8px;
+			background-color: #fff;
+			min-width: 200px;
+			border: 1px solid #ddd;
+			padding: 10px;
+			z-index: 1000;
+		}
+
+			.dropdown-content label {
+				display: block;
+			}
+
+		.searchfield:focus{
+			border:none;
+			outline:none;
+			border-bottom:1px solid gray;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<div class="card" style="margin-top:10px;">
+		<div class="card-head" style="border-bottom:1px solid gray;">
+
+			<div class="row">
+				<div class="col-3">
+					<label style="position:relative; font-size:24px; margin-left:20px;font-weight: bold;"><i class="ri-square-fill" style="border:1px solid black; margin-right:7px; font-size:20px;"></i>  Task List</label>
+				</div>
+				<div class="col-9" style="text-align:end;">
+					<a href="/Tasks/AddTask" class="task"><i class="bi bi-plus"></i> New Task</a>
+					<a href="/Tasks/DeletedTasks" class="task"><i class="bi bi-trash" style="margin-right:3px;"></i>Task Bin</a>
+				</div>
+			</div>
+		</div>
+
+		<div class="card-body" style="min-height:400px;">
+			<div class="row mb-3">
+
+				<form id="filterForm" method="get" action="@Url.Action("Tasks", "Tasks")">
+
+					<div class="col-8" style="display:flex;">
+					    <!-- Assignee Filter -->
+					    @* <div class="dropdown" id="assigneeFilterDropdown" style="margin-right:10px;">
+					        <button class="dropbtn" type="button" style="width:200px;">
+					            Assignee
+					            <i class="bi bi-chevron-down" style="margin-left:45px;"></i>
+					        </button>
+					        <div class="dropdown-content">
+					            @foreach (var assignee in ViewBag.UniqueAssignees)
+					            {
+					                string displayName = assignee;
+					                if (assignee == Context.Session.GetString("UserName"))
+					                {
+					                    displayName = "Me";
+					                }
+					                <label>
+					                    <input type="checkbox" name="assignees" value="@assignee" @(ViewBag.SelectedAssignees != null && ViewBag.SelectedAssignees.Contains(assignee) ? "checked" : "") class="filter-checkbox">
+					                    @displayName
+					                </label>
+					            }
+					        </div>
+					    </div> *@
+
+						<div class="dropdown" id="assigneeFilterDropdown" style="margin-right:10px;">
+							<button class="dropbtn" type="button" style="width:250px;display:flex;align-items:center;justify-content:space-between">
+								<span style="order:1">Assignee</span>
+								<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+							</button>
+							<div class="dropdown-content">
+								<input class="searchfield" type="text" id="assigneeSearch" placeholder="Search assignees..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+
+								<label>
+									<input type="checkbox" id="selectAll" class="filter-checkbox " id="asignee_selectall" onclick="toggleAll(this)">
+									Select All
+								</label>
+
+								@foreach (var assignee in ViewBag.UniqueAssignees)
+								{
+									string displayName = assignee;
+									if (assignee == Context.Session.GetString("UserName"))
+									{
+										displayName = "Me";
+									}
+									<label>
+										<input type="checkbox" name="assignees" value="@assignee" @(ViewBag.SelectedAssignees != null && ViewBag.SelectedAssignees.Contains(assignee) ? "checked" : "") class="filter-checkbox assignee-checkbox">
+										@displayName
+									</label>
+								}
+							</div>
+						</div>
+
+
+					    <!-- Project Filter -->
+						<div class="dropdown" id="projectFilterDropdown" style="margin-right:10px;">
+							<button class="dropbtn" type="button" style="width:250px;display:flex;align-items:center;justify-content:space-between">
+								<span style="order:1">Project</span>
+								<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+							</button>
+							<div class="dropdown-content">
+								<input class="searchfield" type="text" id="projectSearch" placeholder="Search Project..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+
+								<label>
+									<input type="checkbox" id="selectAllProjects" class="filter-checkbox" id="_selectall" onclick="toggleAllProjects(this)">
+									Select All
+								</label>
+
+								@foreach (var project in ViewBag.UniqueProjects)
+								{
+									<label>
+										<input type="checkbox" name="projects" value="@project" @(ViewBag.SelectedProjects != null && ViewBag.SelectedProjects.Contains(project) ? "checked" : "") class="filter-checkbox project-checkbox">
+										@project
+									</label>
+								}
+							</div>
+						</div>
+
+					    <!-- Status Filter -->
+						<div class="dropdown" id="statusFilterDropdown" style="margin-right:10px;">
+							<button class="dropbtn" type="button" style="width:250px;display:flex;align-items:center;justify-content:space-between">
+								<span style="order:1">Status</span>
+								<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+							</button>
+							<div class="dropdown-content">
+								<input class="searchfield" type="text" id="statusSearch" placeholder="Search Status..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+
+								<label>
+									<input type="checkbox" id="selectAllStatuses" class="filter-checkbox" id="status_selectall" onclick="toggleAllStatuses(this)">
+									Select All
+								</label>
+
+								@foreach (var status in new[] { "Open", "Done", "In Progress", "To Verify", "On Hold" })
+								{
+									<label>
+										<input type="checkbox" name="statuses" value="@status" @(ViewBag.SelectedStatuses != null && ViewBag.SelectedStatuses.Contains(status) ? "checked" : "") class="filter-checkbox status-checkbox">
+										@status
+									</label>
+								}
+							</div>
+						</div>
+
+					    <!-- Priority Filter -->
+						<div class="dropdown" id="priorityFilterDropdown" style="margin-right:10px;">
+							<button class="dropbtn" type="button" style="width:250px;display:flex;align-items:center;justify-content:space-between">
+								<span style="order:1">Priority</span>
+								<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+							</button>
+							<div class="dropdown-content">
+								<input class="searchfield" type="text" id="prioritySearch" placeholder="Search Priority..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+
+								<label>
+									<input type="checkbox" id="selectAllPriorities" class="filter-checkbox" id="priority_selectall" onclick="toggleAllPriorities(this)">
+									Select All
+								</label>
+
+								@foreach (var priority in new[] { "Major", "Minor", "Critical", "Show Stopper", "Normal" })
+								{
+									<label>
+										<input type="checkbox" name="priorities" value="@priority" @(ViewBag.SelectedPriorities != null && ViewBag.SelectedPriorities.Contains(priority) ? "checked" : "") class="filter-checkbox priority-checkbox">
+										@priority
+									</label>
+								}
+							</div>
+						</div>
+
+
+						<button class="btn btn-outline-danger btn-sm" onclick="clearAllFilters()" id="clearFiltersButton" style="align-items:center; white-space: nowrap;  width:auto; display:none;">Clear Filters</button>
+
+
+					    <input type="hidden" name="page" value="@ViewBag.CurrentPage" />
+					    <input type="hidden" name="pageSize" value="15" />
+				
+					</div>
+
+				</form>
+
+
+			</div>
+
+			<div id="selectedAssignees" style="display:none;"></div>
+			<div id="selectedStatus" style="display:none;"></div>
+			<div id="selectedPriority" style="display:none;"></div>
+			<div id="selectedProject" style="display:none;"></div>
+
+			<table class="table table-hover" id="allTable">
+				<thead class="table-head-hover">
+					<tr>
+						<th>Task</th>
+						<th>Type</th>
+						<th>Summary</th>
+						<th>Priority</th>
+						<th>Status</th>
+						<th>Assigned To</th>
+						<th>Start Date</th>
+						<th>Completion Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (DataRow row in Model.Rows)
+					{
+						<tr>
+							<td>
+								@if (row["Status"].ToString() == "Done")
+								{
+									<span>@row["ProjectID"].ToString().Substring(0, 1)</span>
+									<a href="@Url.Action("Details", "Tasks", new { id = row["ProjectID"] })">
+										<strike>@row["ProjectID"]</strike>
+									</a>
+								}
+								else
+								{
+									<span>@row["ProjectID"].ToString().Substring(0, 1)</span>
+									<a class="projectid" href="@Url.Action("Details", "Tasks", new { id = row["ProjectID"] })">
+										@row["ProjectID"]
+									</a>
+								}
+							</td>
+							<td>@row["Type"]</td>
+							<td>
+								@{
+									var summary = row["Summary"] as string;
+									if (summary != null && summary.Length > 40)
+									{
+										summary = summary.Substring(0, 25) + "...";
+									}
+								}
+								@summary
+							</td>
+							<td>@row["Priority"]</td>
+							<td>@row["Status"]</td>
+							<td>@row["Assignee"]</td>
+							<td>@Convert.ToDateTime(row["Created"]).ToString("dd-MMM-yyyy")</td>
+							<td>
+								@if (row["CompletionDate"] != DBNull.Value)
+								{
+									@Convert.ToDateTime(row["CompletionDate"]).ToString("dd-MMM-yyyy")
+								}
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
+
+		</div>
+
+		<ul class="pagination justify-content-center">
+
+			@if (ViewBag.PageCount > 1)
+			{
+				<li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+					<a class="page-link" href="@Url.Action("Tasks", "Tasks", new { page = 1, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+						<i class="ri-arrow-left-s-line"></i> First
+					</a>
+				</li>
+			}
+
+			<li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+				<a class="page-link" href="@Url.Action("Tasks", "Tasks", new { page = ViewBag.CurrentPage - 1, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+					<i class="ri-arrow-left-double-line"></i>
+				</a>
+			</li>
+			@for (int i = Math.Max(1, ViewBag.CurrentPage - 2); i <= Math.Min(ViewBag.CurrentPage + 2, ViewBag.PageCount); i++)
+			{
+				<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+					<a class="page-link" href="@Url.Action("Tasks", "Tasks", new { page = i, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">@i</a>
+				</li>
+			}
+
+			<li class="page-item @(ViewBag.CurrentPage == ViewBag.PageCount ? "disabled" : "")">
+				<a class="page-link" href="@Url.Action("Tasks", "Tasks", new { page = ViewBag.CurrentPage + 1, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+					<i class="ri-arrow-right-double-line"></i>
+				</a>
+			</li>
+			@if (ViewBag.PageCount > 1)
+			{
+				<li class="page-item @(ViewBag.CurrentPage == ViewBag.PageCount ? "disabled" : "")">
+					<a class="page-link" href="@Url.Action("Tasks", "Tasks", new { page = ViewBag.PageCount, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+						Last <i class="ri-arrow-right-s-line"></i>
+					</a>
+				</li>
+			}
+		</ul>
+		
+	</div>
+
+
+	</div>
+
+
+
+	@if (TempData["Status"] != null)
+	{
+
+		<form id="myForm">
+			<div id="myModal" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+				<div class="modal-content">
+					<div class="modal-header" style="border-bottom:1px solid gray; display: flex; justify-content: space-between;">
+						<h3>Data count for @TempData["ProjectID"]</h3>
+						<button type="button" class="btn close" data-dismiss="modal" style="margin-top:-20px; margin-right:-20px;"><i class="bi bi-x-square-fill" style="font-size:24px; color:#FC0606"></i></button>
+					</div>
+					<div class="modal-body">
+
+
+						<div class="row mt-2">
+							<div class="col">
+								<div class="form-group">
+									<label for="processedData">Processed Data Count</label>
+									<input type="number" class="form-control" id="processedData" required inputmode="numeric">
+								</div>
+							</div>
+						</div>
+						<div class="row mt-2">
+							<div class="col">
+								<div class="form-group">
+									<label for="rejectedData">Rejected Data Count</label>
+									<input type="number" class="form-control" id="rejectedData" required inputmode="numeric">
+								</div>
+							</div>
+						</div>
+
+						<div class="row mt-2">
+							<div class="col">
+								<div class="form-group">
+									<label for="statename">State</label>
+									<select class="form-control" id="state-dropdown" required>
+									</select>
+								</div>
+							</div>
+						</div>
+
+
+
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="submitBtn">OK</button>
+					</div>
+				</div>
+			</div>
+		</form>
+
+
+
+
+	}
+
+	<script>
+		document.addEventListener('DOMContentLoaded', function () {
+			var checkboxes = document.querySelectorAll('.filter-checkbox');
+			checkboxes.forEach(function (checkbox) {
+				checkbox.addEventListener('change', function () {
+					document.getElementById('filterForm').submit();
+				});
+			});
+		});
+	 
+		document.getElementById('assigneeSearch').addEventListener('input', function () {
+			filterDropdown('assigneeFilterDropdown', this.value.toLowerCase());
+		});
+
+		document.getElementById('projectSearch').addEventListener('input', function () {
+			filterDropdown('projectFilterDropdown', this.value.toLowerCase());
+		});
+
+		document.getElementById('statusSearch').addEventListener('input', function () {
+			filterDropdown('statusFilterDropdown', this.value.toLowerCase());
+		});
+
+		document.getElementById('prioritySearch').addEventListener('input', function () {
+			filterDropdown('priorityFilterDropdown', this.value.toLowerCase());
+		});
+
+		function filterDropdown(dropdownId, searchValue) {
+			var dropdown = document.getElementById(dropdownId);
+			var labels = dropdown.getElementsByTagName('label');
+
+			for (var i = 0; i < labels.length; i++) {
+				var label = labels[i];
+				if (label.textContent.toLowerCase().includes(searchValue)) {
+					label.style.display = '';
+				} else {
+					label.style.display = 'none';
+				}
+			}
+		}
+
+		document.addEventListener('click', function (event) {
+			var dropdowns = document.getElementsByClassName('dropdown-content');
+			for (var i = 0; i < dropdowns.length; i++) {
+				var dropdown = dropdowns[i];
+				if (!dropdown.contains(event.target)) {
+					var searchField = dropdown.querySelector('input.searchfield');
+					searchField.value = '';
+					filterDropdown(dropdown.parentElement.id, '');
+				}
+			}
+		});
+		$(document).ready(function () {
+			// Function to check if any dropdown option is selected
+			function checkDropdowns() {
+				var anyOptionSelected = false;
+				// Check if any assignee, project, status, or priority dropdown option is selected
+				if ($("input[name='assignees']:checked").length > 0 ||
+					$("input[name='projects']:checked").length > 0 ||
+					$("input[name='statuses']:checked").length > 0 ||
+					$("input[name='priorities']:checked").length > 0) {
+					$("#clearFiltersButton").show();
+				}
+				else {
+					$("#clearFiltersButton").hide();
+				}
+			}
+
+			// Hide or show the "Clear Filters" button based on whether any dropdown option is selected
+			$(".filter-checkbox").change(checkDropdowns());
+
+			// When the "Clear Filters" button is clicked
+			$("#clearFiltersButton").click(function () {
+				// Uncheck all checkboxes with the class "filter-checkbox"
+				$(".filter-checkbox").prop("checked", false);
+				// Hide the "Clear Filters" button
+				$(this).hide();
+				// Submit the form to reload data without filters
+				document.getElementById("filterForm").submit();
+			});
+		});
+
+
+
+		// _____________ Select all option______________
+		function toggleAll(source) {
+			checkboxes = document.getElementsByClassName('assignee-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			document.getElementById('assignee_selectall').checked = true;
+		}
+		function toggleAllProjects(source) {
+			checkboxes = document.getElementsByClassName('project-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			$('#project_selectall').prop('checked', true);
+		}
+		function toggleAllStatuses(source) {
+			checkboxes = document.getElementsByClassName('status-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			$('#status_selectall').prop('checked', true);
+		}
+	 
+		function toggleAllPriorities(source) {
+			checkboxes = document.getElementsByClassName('priority-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			$('#priorities_selectall').prop('checked', true);
+		}
+		// document.addEventListener("DOMContentLoaded", function () {
+		// 	function initializeDropdown(dropdownId, selectedContainerId, originalButtonText) {
+		// 		const dropdown = document.getElementById(dropdownId);
+		// 		const dropdownBtn = dropdown.querySelector('.dropbtn');
+		// 		const dropdownContent = dropdown.querySelector('.dropdown-content');
+		// 		const checkboxes = dropdown.querySelectorAll('.dropdown-content input[type="checkbox"]');
+		// 		const selectedContainer = document.getElementById(selectedContainerId);
+		// 		const dropdownIcon = dropdownBtn.querySelector('.bi');
+
+		// 		dropdownBtn.textContent = originalButtonText;
+		// 		dropdownBtn.appendChild(dropdownIcon);
+
+		// 		dropdownBtn.addEventListener('click', function () {
+		// 			const isVisible = dropdownContent.style.display === 'block';
+		// 			dropdownContent.style.display = isVisible ? 'none' : 'block';
+		// 			dropdownIcon.classList.toggle('bi-chevron-down', isVisible);
+		// 			dropdownIcon.classList.toggle('bi-chevron-up', !isVisible);
+		// 		});
+
+		// 		function updateButtonText() {
+		// 			const selectedLabels = [];
+		// 			checkboxes.forEach(function (checkbox) {
+		// 				if (checkbox.checked && checkbox.value !== "") {
+		// 					selectedLabels.push(checkbox.parentNode.textContent.trim());
+		// 				}
+		// 			});
+
+		// 			if (selectedLabels.length === 0) {
+		// 				dropdownBtn.textContent = originalButtonText;
+		// 			} else if (selectedLabels.length === 1) {
+		// 				dropdownBtn.textContent = selectedLabels[0];
+		// 			} else {
+		// 				const firstLabel = selectedLabels[0];
+		// 				const additionalCount = selectedLabels.length - 1;
+		// 				dropdownBtn.textContent = `${firstLabel} + ${additionalCount}`;
+		// 			}
+
+		// 			dropdownBtn.appendChild(dropdownIcon);
+		// 		}
+
+		// 		function handleCheckboxChange() {
+		// 			selectedContainer.innerHTML = ''; 
+		// 			checkboxes.forEach(function (checkbox) {
+		// 				if (checkbox.checked && checkbox.value !== "") {
+		// 					const label = checkbox.parentNode.textContent.trim();
+		// 					const selectedItem = document.createElement('div');
+		// 					selectedItem.textContent = label;
+		// 					selectedContainer.appendChild(selectedItem);
+		// 				}
+		// 			});
+		// 			updateButtonText();
+		// 			localStorage.setItem(dropdownId + '_isOpen', dropdownContent.style.display === 'block');
+		// 		}
+
+		// 		checkboxes.forEach(function (checkbox) {
+		// 			checkbox.addEventListener('change', handleCheckboxChange);
+		// 		});
+
+		// 		document.addEventListener('click', function (event) {
+		// 			const target = event.target;
+		// 			if (!dropdownContent.contains(target) && !dropdownBtn.contains(target)) {
+		// 				dropdownContent.style.display = 'none';
+		// 				dropdownIcon.classList.add('bi-chevron-down');
+		// 				dropdownIcon.classList.remove('bi-chevron-up');
+		// 				localStorage.removeItem(dropdownId + '_isOpen');
+		// 			}
+		// 		});
+
+		// 		const isOpen = localStorage.getItem(dropdownId + '_isOpen');
+		// 		if (isOpen === 'true') {
+		// 			dropdownContent.style.display = 'block';
+		// 			dropdownIcon.classList.remove('bi-chevron-down');
+		// 			dropdownIcon.classList.add('bi-chevron-up');
+		// 		}
+
+		// 		updateButtonText();
+		// 	}
+
+		// 	initializeDropdown('assigneeFilterDropdown', 'selectedAssignees', 'Assignees');
+		// 	initializeDropdown('statusFilterDropdown', 'selectedStatus', 'Status');
+		// 	initializeDropdown('priorityFilterDropdown', 'selectedPriority', 'Priority');
+		// 	initializeDropdown('projectFilterDropdown', 'selectedPriority', 'Project'); // Correct the container ID if it's different
+		// });
+
+		document.addEventListener("DOMContentLoaded", function () {
+			function initializeDropdown(dropdownId, selectedContainerId, originalButtonText) {
+				const dropdown = document.getElementById(dropdownId);
+				const dropdownBtn = dropdown.querySelector('.dropbtn');
+				const dropdownContent = dropdown.querySelector('.dropdown-content');
+				const checkboxes = dropdown.querySelectorAll('.dropdown-content input[type="checkbox"]');
+				const selectedContainer = document.getElementById(selectedContainerId);
+				const dropdownIcon = dropdownBtn.querySelector('.bi');
+
+				dropdownBtn.textContent = originalButtonText;
+				dropdownBtn.appendChild(dropdownIcon);
+
+				dropdownBtn.addEventListener('click', function () {
+					const isVisible = dropdownContent.style.display === 'block';
+					dropdownContent.style.display = isVisible ? 'none' : 'block';
+					dropdownIcon.classList.toggle('bi-chevron-down', isVisible);
+					dropdownIcon.classList.toggle('bi-chevron-up', !isVisible);
+				});
+
+				function updateButtonText() {
+					const selectedLabels = [];
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							selectedLabels.push(checkbox.parentNode.textContent.trim());
+						}
+					});
+
+					let buttonText;
+					if (selectedLabels.length === 0) {
+						buttonText = originalButtonText;
+					} else {
+						buttonText = selectedLabels.join(', ');
+						if (buttonText.length > 20) {
+							buttonText = buttonText.slice(0, 18) + '...';
+						}
+					}
+
+					dropdownBtn.textContent = buttonText;
+					dropdownBtn.appendChild(dropdownIcon);
+				}
+
+				function handleCheckboxChange() {
+					selectedContainer.innerHTML = '';
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							const label = checkbox.parentNode.textContent.trim();
+							const selectedItem = document.createElement('div');
+							selectedItem.textContent = label;
+							selectedContainer.appendChild(selectedItem);
+						}
+					});
+					updateButtonText();
+					localStorage.setItem(dropdownId + '_isOpen', dropdownContent.style.display === 'block');
+				}
+
+				checkboxes.forEach(function (checkbox) {
+					checkbox.addEventListener('change', handleCheckboxChange);
+				});
+
+				document.addEventListener('click', function (event) {
+					const target = event.target;
+					if (!dropdownContent.contains(target) && !dropdownBtn.contains(target)) {
+						dropdownContent.style.display = 'none';
+						dropdownIcon.classList.add('bi-chevron-down');
+						dropdownIcon.classList.remove('bi-chevron-up');
+						localStorage.removeItem(dropdownId + '_isOpen');
+					}
+				});
+
+				const isOpen = localStorage.getItem(dropdownId + '_isOpen');
+				if (isOpen === 'true') {
+					dropdownContent.style.display = 'block';
+					dropdownIcon.classList.remove('bi-chevron-down');
+					dropdownIcon.classList.add('bi-chevron-up');
+				}
+
+				updateButtonText();
+			}
+
+			initializeDropdown('assigneeFilterDropdown', 'selectedAssignees', 'Assignee');
+			initializeDropdown('statusFilterDropdown', 'selectedStatus', 'Status');
+			initializeDropdown('priorityFilterDropdown', 'selectedPriority', 'Priority');
+			initializeDropdown('projectFilterDropdown', 'selectedProject', 'Project'); // Corrected container ID
+		});
+
+		
+
+	</script>
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script>
+		$(document).ready(function () {
+			var rowsPerPage = 15;
+			var rows = $('#allTable tbody tr');
+			var rowsCount = rows.length;
+			var pageCount = Math.ceil(rowsCount / rowsPerPage);
+			var numbers = $('#pagination');
+
+			// Generate pagination
+			for (var i = 0; i < pageCount; i++) {
+				numbers.append('<a href="#" class="page-link" data-page="' + i + '">' + (i + 1) + '</a> ');
+			}
+
+			// Display first set of rows
+			displayRows(0);
+
+			// Add click event to pagination links
+			$('#pagination a').click(function (e) {
+				e.preventDefault();
+				var page = $(this).data('page');
+				displayRows(page);
+			});
+
+			function displayRows(page) {
+				var start = page * rowsPerPage;
+				var end = start + rowsPerPage;
+
+				rows.hide();
+				rows.slice(start, end).show();
+
+				$('#pagination a').removeClass('active');
+				$('#pagination a').eq(page).addClass('active');
+			}
+		});
+	</script>
+
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+	<script>
+		document.getElementById("settings").addEventListener("click", function () {
+			var dropdownMenu = document.getElementById("dropdownMenu");
+			if (dropdownMenu.style.display === "none") {
+				dropdownMenu.style.display = "block";
+			} else {
+				dropdownMenu.style.display = "none";
+			}
+		});
+	 
+		var states = [
+			"Andaman and Nicobar Islands",
+			"Andhra Pradesh",
+			"Arunachal Pradesh",
+			"Assam",
+			"Bihar",
+			"Chhattisgarh",
+			"Chandigarh",
+			"Daman and Diu",
+			"Delhi",
+			"Dadra and Nagar Haveli",
+			"Goa",
+			"Gujarat",
+			"Himachal Pradesh",
+			"Haryana",
+			"Jammu and Kashmir",
+			"Jharkhand",
+			"Kerala",
+			"Karnataka",
+			"Lakshadweep",
+			"Meghalaya",
+			"Maharashtra",
+			"Manipur",
+			"Madhya Pradesh",
+			"Mizoram",
+			"Nagaland",
+			"Odisha",
+			"Punjab",
+			"Puducherry",
+			"Rajasthan",
+			"Sikkim",
+			"Tamil Nadu",
+			"Tripura",
+			"Uttarakhand",
+			"Uttar Pradesh",
+			"West Bengal",
+			"Telangana",
+			"Ladakh"
+		];
+
+		function populateDropdown() {
+			var select = document.getElementById("state-dropdown");
+
+			select.innerHTML = "";
+
+			var defaultOption = document.createElement("option");
+			defaultOption.text = "Select State";
+			defaultOption.value = "";
+			select.appendChild(defaultOption);
+
+			states.forEach(function (state) {
+				var option = document.createElement("option");
+				option.text = state;
+				option.value = state;
+				select.appendChild(option);
+			});
+		}
+
+		populateDropdown();
+	 
+		$(document).ready(function () {
+			$("#submitBtn").click(function (event) {
+				event.preventDefault();
+
+				$(".error-message").remove();
+
+				var processedData = $("#processedData").val();
+				var rejectedData = $("#rejectedData").val();
+				var project = "@TempData["Project"]";
+				var projectID = "@TempData["ProjectID"]";
+				var assignee = "@TempData["Assignee"]";
+				var selectedState = $("#state-dropdown").val();
+
+				var isValid = true;
+
+				if (processedData.trim() === "") {
+					$("#processedData").after('<p class="error-message" style="color: red;">Enter processed data count</p>');
+					isValid = false;
+				}
+				if (rejectedData.trim() === "") {
+					$("#rejectedData").after('<p class="error-message" style="color: red;">Enter rejected data count</p>');
+					isValid = false;
+				}
+
+				if (!isValid) {
+					return false;
+				}
+
+				$.ajax({
+					url: "/Tasks/InsertFormData",
+					type: "POST",
+					dataType: "json",
+					data: {
+						processedData: processedData,
+						rejectedData: rejectedData,
+						project: project,
+						projectID: projectID,
+						assignee: assignee,
+						state: selectedState
+					},
+					success: function (response) {
+						if (response.success) {
+
+							alert("Data inserted successfully!");
+							$('#myForm')[0].reset();
+							$('#myModal').find('.close').click();
+						} else {
+							alert("Failed to insert data into the database.");
+						}
+					},
+					error: function (xhr, status, error) {
+
+						alert("An error occurred while processing your request.");
+					}
+				});
+			});
+		});
+	 
+		var modal = document.getElementById("myModal");
+		var closeButton = document.querySelector(".modal-header button.close");
+
+		window.onload = function () {
+			modal.style.display = "block";
+		};
+
+		closeButton.addEventListener("click", function () {
+			modal.style.display = "none";
+		});
+
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.style.display = "block";
+			}
+		};
+	</script>
+
+
+
+
+</body>
+
+</html>

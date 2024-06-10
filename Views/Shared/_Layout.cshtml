@@ -1,0 +1,411 @@
+﻿@using Microsoft.AspNetCore.Http
+
+@if (Context.Session.GetString("UserRole") == null)
+{
+	Context.Response.Redirect("/Auth/Login");
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>@ViewData["Title"] - IMSMIS</title>
+	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+	<link rel="stylesheet" href="~/IMSMIS.styles.css" asp-append-version="true" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Solway:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+	<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+	<style>
+		#projectList {
+			padding: 20px;
+			margin: 0;
+		}
+
+			#projectList li {
+				background-color: #fff;
+				font-size: 14px;
+				list-style: circle;
+				margin: 25px;
+			}
+
+				#projectList li.highlighted {
+					color: #34495E;
+					background-color: #D6EAF8;
+					list-style: circle;
+					padding-left: 5px;
+					padding-top: 10px;
+				}
+
+		.filters {
+			text-decoration: none;
+			font-size: 15px;
+			font-weight: 600;
+			color: #795D83;
+			cursor: pointer;
+		}
+
+		.dropbtn {
+			background-color: #fff;
+			color: black;
+			padding: 4px 6px;
+			text-align: center;
+			font-size: 15px;
+			font-weight: 600;
+			border: 1px solid gray;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			border-radius: 8px;
+			background-color: #fff;
+			min-width: 200px;
+			border: 1px solid #ddd;
+			padding: 10px;
+			z-index: 1000;
+		}
+
+			.dropdown-content label {
+				display: block;
+			}
+
+		.searchfield:focus {
+			border: none;
+			outline: none;
+			border-bottom: 1px solid gray;
+		}
+	</style>
+</head>
+<body>
+
+	@{
+
+		var username = @Context.Session.GetString("UserName");
+	}
+
+	<div class="sidebar">
+		<div class="sidebar-head">
+			<img src="/Images/CP1.png" alt="Centered Image" style="height:50px; width:100%">
+			<hr>
+		</div>
+		<ul>
+
+			@if (username.Equals("Siddharth Kumar"))
+			{
+				<li>
+					<a href="/Dashboard/Dashboard" class="reports" id="dashboard-link">
+						<i class="ri-dashboard-line"></i>
+						Dashboard
+					</a>
+				</li>
+
+				<li>
+					<a href="/Tasks/Tasks" class="reports" id="tasks-link">
+						<i class="ri-task-line"></i>
+						Tasks
+					</a>
+				</li>
+
+				<li>
+					<a href="/Reports/Reports" class="reports" id="reports-link">
+						<i class="ri-file-chart-line"></i>
+						Reports
+					</a>
+				</li>
+
+				<li>
+					<a href="/Tools/Tools" class="reports" id="tools-link">
+						<i class="ri-file-list-line"></i>
+						Tools
+					</a>
+				</li>
+
+			}
+			else
+			{
+				<li>
+					<a href="/Dashboard/Dashboard" class="reports" id="dashboard-link">
+						<i class="ri-dashboard-line"></i>
+						Dashboard
+					</a>
+				</li>
+
+
+				<li>
+					<a href="/Tasks/Tasks" class="reports" id="tasks-link">
+						<i class="ri-task-line"></i>
+						Tasks
+					</a>
+				</li>
+
+				<li>
+					<a href="/Users/Users" class="reports" id="assignee-link">
+						<i class="ri-user-received-fill"></i>
+						Users
+					</a>
+				</li>
+
+
+				<li>
+					<a href="/Reports/Reports" class="reports" id="reports-link">
+						<i class="ri-file-chart-line"></i>
+						Reports
+					</a>
+				</li>
+
+				<li>
+					<a href="/Tools/Tools" class="reports" id="tools-link">
+						<i class="ri-file-list-line"></i>
+						Tools
+					</a>
+				</li>
+
+				<li>
+					<a href="/Projects/Projects" class="reports" id="tools-link">
+						<i class="ri-folder-open-fill"></i>
+						Projects
+					</a>
+				</li>
+			}
+
+		</ul>
+	</div>
+	<div class="content">
+		<nav class="navbar navbar-expand-lg ">
+			<div class="container-fluid">
+
+				<div class="navbar-collapse" id="navbarNavDropdown" style="display:flex;justify-content:end; border-bottom:1px solid gray;">
+					<h2></h2>
+					<ul class="navbar-nav ms-auto" style="display:flex; align-items:center;">
+						<div class="notification" style="margin-right:5px;">
+							<ul class="notification-drop">
+								<li class="item" style="list-style:none;">
+									<img src="/Images/Doorbell.png" class="notification-bell" style="margin-right:-10px;margin-top:3px" aria-hidden="true">
+									<span id="notificationBadge" class="btn__badge pulse-button"></span>
+									<ul id="projectList" style="padding:10px;z-index:10;width: 430px;margin-left:-50px;">
+									</ul>
+								</li>
+							</ul>
+						</div>
+
+
+						<li class="nav-item dropdown">
+
+
+							<a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<span id="user-initial" style=" position:relative;"></span>
+
+							</a>
+
+
+							<ul class="dropdown-menu dropdown-menu-end" style="height: 130px;width: 150px;">
+								<li style="margin-top: 6px;font-size: 18px;margin-left: 15px;"><a class="dropdown-item" asp asp-action="Profile" asp-controller="Auth" id="logout"><i class="ri-profile-fill"></i> Profile</a></li>
+								<hr />
+								<li style="margin-top: 6px;font-size: 18px;margin-left: 13px;"><a class="dropdown-item" asp asp-action="Logout" asp-controller="Auth" id="logout"><i class="ri-logout-box-r-fill"></i> Logout</a></li>
+
+							</ul>
+						</li>
+						<label style="line-height:1rem;">
+							<a style="font-size:15px; font-weight:bold;margin-right:25px">@Context.Session.GetString("UserName")</a>
+							<br>
+							<a style="font-size:12px;font-weight:normal;">@Context.Session.GetString("UserRole")</a>
+						</label>
+					</ul>
+				</div>
+			</div>
+
+		</nav>
+		<div style="padding:5px;">
+			@RenderBody()
+		</div>
+	</div>
+
+	<input type="hidden" id="currentUserName" value="@username" />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script>
+		$(document).ready(function () {
+
+			function fetchNotificationCount() {
+				$.ajax({
+					type: "GET",
+					url: "/Notifications/GetNotificationCount",
+					success: function (data) {
+						if (data > 0) {
+							$("#notificationBadge").text(data).show();
+						} else {
+							$("#notificationBadge").hide();
+						}
+					},
+					error: function (xhr, status, error) {
+						console.error("Error fetching notification count:", error);
+					}
+				});
+			}
+			function fetchProjectIDs() {
+				var currentUserName = $("#currentUserName").val();
+
+				$.ajax({
+					type: "GET",
+					url: "/Notifications/GetProjectIDs",
+					success: function (data) {
+						var projectList = $("#projectList");
+						projectList.empty();
+						var maxItems = 3;
+						var itemsToShow = data.slice(0, maxItems);
+						if (itemsToShow.length === 0) {
+							projectList.append($("<li>").text("No notifications").addClass("empty-item"));
+						} else {
+							itemsToShow.forEach(function (project) {
+								var assignee = (currentUserName === project.assignee) ? "you." : project.assignee;
+								if (project.assignee === project.assigner) {
+									assignee = "himself.";
+								}
+								let specificDate = new Date(project.create_at);
+								// var li = $("<li>").html('<span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background-color: black; margin-right: 8px;"></span>' + project.assigner + ' ' + project.message + ' ' + assignee);
+								var li = $("<li>").html('<span style="border:1px solid gray;padding:4px;border-radius:10px;background-color:#7986CB;color:#fff;margin-right:10px">' + getUserInitial(project.assigner) + '</span><a href="#">' + project.assigner + '</a><span style="display:inline-block; width:10px; height:10px; border-radius: 50%; background-color:gray; margin-right:8px;margin-left:10px;"></span>' + specificDate.toLocaleString() + '</br></br> ' + project.message + ' ' + assignee);
+
+								// Create a link element for "View Details"
+								var viewDetailsLink = $('<a>')
+									.attr('href', '/Tasks/Details/' + project.projectID)
+									.text('View Details')
+									.css({
+										'display': 'block',
+										'padding-bottom': '5px',
+										'text-decoration': 'none',
+										'margin-bottom': '2px'
+									});
+
+								// Append the link to the <li> element
+
+								li.append(viewDetailsLink);
+								li.append('<hr>');
+
+								if (project.flag === "True") {
+									li.addClass("highlighted");
+								}
+								li.click(function () {
+									changeFlag(project.nid);
+									console.log(project.nid);
+								});
+								projectList.append(li);
+							});
+							if (data.length > 1) {
+								var showMoreLink = $("<a>").text("Show All Notifications").attr("href", "/Notifications/Notifications?pageNumber=1&pageSize=6").addClass("show-more-link");
+								projectList.append($("<li>").append(showMoreLink));
+							}
+						}
+					},
+					error: function (xhr, status, error) {
+						console.error("Error fetching project IDs:", error);
+					}
+				});
+			}
+
+			fetchNotificationCount();
+			fetchProjectIDs();
+
+			function changeFlag(nID) {
+				$.ajax({
+					type: "POST",
+					url: "/Notifications/ChangeFlag",
+					data: { ID: nID },
+					success: function (response) {
+						fetchProjectIDs();
+						fetchNotificationCount();
+					},
+					error: function (xhr, status, error) {
+						console.error("Error changing flag:", error);
+					}
+				});
+			}
+		});
+	</script>
+	<script>
+		function setActiveLink() {
+			var path = window.location.pathname;
+			var links = $('.sidebar ul li a');
+			links.removeClass('active-link');
+			if (path === "/NHA/NHA" || path === '/Epic/Epic' || path === '/Disability/Disability') {
+				$('#tools-link').addClass('active-link');
+				return;
+			}
+			links.each(function () {
+				var href = $(this).attr('href');
+				var linkName = href.substring(href.lastIndexOf('/') + 1);
+				if (path.includes(linkName)) {
+					$(this).addClass('active-link');
+				}
+			});
+		}
+		$(document).ready(function () {
+			setActiveLink();
+		});
+
+		var currentPath = window.location.pathname;
+
+		var firstWord = currentPath.split('/')[1];
+
+		// Get the h2 element
+		var h2Element = document.querySelector('.navbar-collapse h2');
+
+		// Update the h2 content with the first word from the path
+		h2Element.textContent = firstWord;
+	</script>
+	<script>
+		$(document).ready(function () {
+			$(".notification-drop .item").on('click', function (event) {
+				event.stopPropagation();
+				$(this).find('ul').toggle();
+			});
+
+			$(document).on('click', function (event) {
+
+				if (!$(event.target).closest('.notification-drop').length) {
+					$(".notification-drop .item ul").hide();
+				}
+			});
+		});
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var username = "@username";
+			var userInitial = getUserInitial(username);
+			var userInitialSpan = document.getElementById("user-initial");
+			// Clear existing content of the span
+			userInitialSpan.innerHTML = "";
+			var userInitialNode = document.createTextNode(userInitial);
+			userInitialSpan.appendChild(userInitialNode);
+			userInitialSpan.style.fontSize = "18px";
+			userInitialSpan.style.position = "relative";
+		});
+
+		function getUserInitial(username) {
+			var words = username.split(" ");
+			var firstInitial = words[0].charAt(0).toUpperCase();
+			var secondInitial = words.length > 1 ? words[1].charAt(0).toUpperCase() : "";
+			return firstInitial + secondInitial;
+		}
+	</script>
+
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="~/js/site.js" asp-append-version="true"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+	@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

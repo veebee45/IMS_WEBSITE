@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Card with Icon</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+	<div class="container mt-5">
+		<div class="row" style="margin-left:-260px;">
+			<!-- Left side with clickable links -->
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-body">
+						<h5>Created Reports List</h5>
+
+						<p>
+							<br />
+							Issue per Assignee Reports:
+							<ul>
+								@foreach (var assigneereport in ViewBag.AssigneeReportNames)
+								{
+									<li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="@Url.Action("ReportGraph", "Reports", new { reportName = assigneereport })">@assigneereport</a></li>
+								}
+							</ul>
+							Issue per Project Reports:
+							<ul style="margin-top:20px;">
+								@foreach (var projectReport in ViewBag.ProjectReportNames)
+								{
+									<li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="@Url.Action("ReportGraph", "Reports", new { reportName = projectReport })">@projectReport</a></li>
+								}
+							</ul>
+							Customised Reports:
+							<ul style="margin-top:20px;">
+								<li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="ReportTable">Test Table Report</a></li>
+								<li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="ReportView">Test Graph Report</a></li>
+							</ul>
+						</p>
+					</div>
+				</div>
+			</div>
+
+			<!-- Right side with text and links -->
+			<div class="col-md-8">
+				<div class="card" style="border:none;">
+					<div class="card-body">
+						<h5>Create Report</h5>
+						<p>
+							Track progress in your projects over a specified timeframe or get a snapshot that shows you where things stand right now. Share reports with other members of your team to keep stakeholders in the loop.
+						</p>
+
+						<i class="fas fa-file-alt fa-3x"></i>
+
+						<p>
+							<br />
+							Issue Distribution Reports:
+							<ul>
+								<li><a href="IssueReports">Issues per assignee</a></li>
+								<li><a href="ProjectReport">Issues per project</a></li>
+								<li><a href="#">Customise Reports</a></li>
+							</ul>
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿.cont {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    flex: 1;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+    .card .card-head {
+        background-color: #ced0fa;
+        color: black;
+        padding: 10px;
+    }
+
+    .card .card-body {
+        padding: 10px;
+    }
+
+    .card .card-footer {
+        padding: 10px;
+        text-align: start;
+    }
+
+        .card .card-footer .btn {
+            background-color: #9698c5;
+            color: #fff;
+            padding: 5px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+            .card .card-footer .btn:hover {
+                background-color: #e2e3ff;
+            }

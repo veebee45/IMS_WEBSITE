@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>NHA</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="~/css/NHA.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .card {
+            width: 20em;
+            height: 90%;
+            background-color: #ffff;
+            border-radius: 2em;
+            box-shadow: 0 0 2em rgba(0,0,0,.2);
+            padding: 2em 1em;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            margin: 0 2em;
+        }
+
+
+        .card_image {
+            width: 10em;
+            height: 10em;
+            border-radius: 50%;
+            border: 5px solid #9698c5;
+            padding: 3px;
+            margin-bottom: 2em;
+        }
+
+            .card_image img {
+                width: 100%;
+                height: 100%;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-top: 0px;
+            }
+
+        .card_content {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .card_title {
+            font-size: 1.5em;
+            font-weight: 500;
+            position: relative;
+            top: .2em;
+        }
+
+        .card_name {
+            color: #9698c5;
+        }
+
+        .card_text {
+            text-align: center;
+            font-size: 1.1em;
+            margin: 1em 0;
+        }
+
+        .card_btn {
+            background-color: #9698c5;
+            color: #ffff;
+            font-size: 1rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            border: none;
+            padding: .5em;
+            border-radius: .5em;
+            margin-top: .5em;
+            cursor: pointer;
+        }
+
+            .card_btn:hover {
+                color: black;
+            }
+
+        .graphbtn {
+            position: relative;
+            background-color: #fff;
+            color: black;
+            border: none;
+            box-shadow: 0 0 10px rgba(117, 117, 117, 0.5);
+            padding: 3px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 5px;
+            cursor: pointer;
+            justify-content: flex-end;
+        }
+
+
+            .graphbtn:hover {
+                background: #a196c5;
+                color: #fff;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="col" style="text-align: end; margin-bottom: 10px; margin-top:15px;">
+        <button class="graphbtn" id="PexportBtnExcel" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px; margin-top:5px;">Add Module</button>
+        <button class="graphbtn" id="PexportBtnCsv" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px;margin-top:5px;">Add Exe</button>
+    </div>
+
+    <section class="swiper mySwiper" style="margin-top: 100px;">
+        <div class="swiper-wrapper">
+            <div class="card swiper-slide">
+                <div class="card_image">
+                    <img src="/Images/NHA-logo.png" />
+                </div>
+                <div class="card_content">
+                    <span class="card_title">ALL INDIA</span>
+                    <span class="card_name">NHA</span>
+                    <p class="card_text">Experience NHA CARDS automation. Elevate your workflow instantly!</p>
+                    <button class="card_btn" data-value="1">Run EXE</button>
+                </div>
+            </div>
+        </div>
+        <br />
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+    <script src="~/js/NHA.js"></script>
+
+
+</body>
+</html>

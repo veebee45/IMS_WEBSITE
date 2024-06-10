@@ -1,0 +1,396 @@
+﻿@model IMSMIS.Models.ReportData
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Card with Icon</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+	<style>
+		#cancelBtn {
+			border: 1px solid gray;
+		}
+
+			#cancelBtn:hover {
+				border: 1px solid #0665F7;
+			}
+
+			#cancelBtn:focus {
+				box-shadow: none;
+			}
+
+		.dropbtn {
+			background-color: #fff;
+			color: black;
+			padding: 4px 6px;
+			text-align: center;
+			font-size: 15px;
+			font-weight: 600;
+			border: 1px solid gray;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			border-radius: 8px;
+			background-color: #fff;
+			min-width: 200px;
+			border: 1px solid #ddd;
+			padding: 10px;
+			z-index: 1000;
+		}
+
+			.dropdown-content label {
+				display: block;
+			}
+
+		.searchfield:focus {
+			border: none;
+			outline: none;
+			border-bottom: 1px solid gray;
+		}
+	</style>
+
+</head>
+<body>
+	<div class="container mt-5">
+		<div class="row" style="margin-left:-160px;">
+			<!-- Left side with clickable links -->
+			<div class="col-md-4">
+				<div class="card mb-3">
+					<div class="card">
+						<div class="card-body">
+							<h5>Created Reports List</h5>
+
+							<p>
+								<br />
+								Issue per Assignee Reports:
+								<ul>
+									@foreach (var assigneereport in ViewBag.AssigneeReportNames)
+									{
+										@* <li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="@Url.Action("ReportGraph", "Reports", new { reportName = assigneereport })">@assigneereport</a></li> *@
+										<li>
+											<i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i>
+											<a href="@Url.Action("ReportGraph", "Reports", new { reportName = assigneereport })">@assigneereport</a>
+											
+										</li>
+									}
+								</ul>
+								Issue per Project Reports:
+								<ul style="margin-top:20px;">
+									@foreach (var projectReport in ViewBag.ProjectReportNames)
+									{
+										@* <li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="@Url.Action("ReportGraph", "Reports", new { reportName = projectReport })">@projectReport</a></li> *@
+										<li>
+											<i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i>
+											<a href="@Url.Action("ReportGraph", "Reports", new { reportName = projectReport })">@projectReport</a>
+											
+										</li>
+									}
+								</ul>
+								Customised Reports:
+								<ul style="margin-top:20px;">
+									<li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="ReportTable">Test Table Report</a>
+									</li>
+									<li><i class="fas fa-file-alt fa-1x" style="margin-right:8px;"></i><a href="ReportView">Test Graph Report</a>
+									</li>
+								</ul>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="col-md-8">
+				<div class="card" style="border:none;">
+					<div class="card-body">
+
+						<div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+
+						<form method="post" asp-controller="Reports" asp-action="InsertReportData">
+
+							<h5>Issues per assignee</h5>
+							<br />
+							<div class="form-group mt-3 row">
+								<label for="firstName" class="col-sm-3 col-form-label">
+									Report Name <font color="red">*</font>
+								</label>
+								<div class="col-sm-5">
+									<input type="text" class="form-control" asp-for="ReportName" placeholder="Enter Report Name" id="firstName" autocomplete="off" required>
+									<input type="hidden" asp-for="ReportDescription" value="Issues Per Assignee" />
+								</div>
+							</div>
+
+							<div class="form-group mt-3 row">
+								<label for="firstName" class="col-sm-3 col-form-label">
+									Assignee <font color="red">*</font>
+								</label>
+								<div class="col-sm-5">
+									<!-- Project Filter -->
+									<div class="dropdown" id="projectFilterDropdown" style="margin-right:10px;">
+										<button class="dropbtn" type="button" style="width:369px;display:flex;align-items:center;justify-content:space-between">
+											<span style="order:1">Select Assignee</span>
+											<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+										</button>
+										<div class="dropdown-content">
+											<input class="searchfield" type="text" id="assigneeSearch" placeholder="Search Assignee..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+											<label>
+												<input type="checkbox" class="select-all-checkbox"> Select All
+											</label>
+											@foreach (var assignee in ViewBag.UniqueAssignees)
+											{
+												<label>
+													<input type="checkbox" name="assignees" value="@assignee" @(ViewBag.SelectedAssignees != null && ViewBag.SelectedAssignees.Contains(assignee) ? "checked" : "") class="filter-checkbox">
+													@assignee
+												</label>
+											}
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group mt-3 row">
+								<label for="presentationType" class="col-sm-3 col-form-label">
+									Presentation Type <font color="red">*</font>
+								</label>
+								<div class="col-sm-5">
+									<div>
+										<label>
+											<input type="radio" asp-for="ReportType" value="Bar" checked> Bar Graph
+										</label>
+										<label style="margin-left: 10px;">
+											<input type="radio" asp-for="ReportType" value="Pie"> Pie Chart
+										</label>
+										<label style="margin-left: 10px;">
+											<input type="radio" asp-for="ReportType" value="Table"> Table View
+										</label>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group mt-3 row">
+								<label for="firstName" class="col-sm-3 col-form-label">
+									Status <font color="red">*</font>
+								</label>
+
+								<div class="col-sm-5">
+									<!-- Status Filter -->
+									<div class="dropdown" id="statusFilterDropdown" style="margin-right:10px;">
+										<button class="dropbtn" type="button" style="width:369px;display:flex;align-items:center;justify-content:space-between">
+											<span style="order:1">Select Status</span>
+											<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+										</button>
+										<div class="dropdown-content">
+											<input class="searchfield" type="text" id="statusSearch" placeholder="Search Status..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+											<label>
+												<input type="checkbox" class="select-all-checkbox"> Select All
+											</label>
+											@foreach (var status in new[] { "Open", "IN Progress", "TO Verify", "Done", "On Hold", "Transferred To Production", "Dispatched" })
+											{
+												<label>
+													<input type="checkbox" name="statuses" value="@status" @(ViewBag.SelectedStatus != null && ViewBag.SelectedStatus.Contains(status) ? "checked" : "") class="filter-checkbox">
+													@status
+												</label>
+											}
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group mt-3 row">
+								<p style="color:gray;">
+									Access is only granted to group members who have the Read Report permission in all of the projects that are stored in the report settings. Users with access to the report can view its data even when they don't have Read Issue permission in these projects.
+								</p>
+							</div>
+							<input type="hidden" id="SelectedOptions" asp-for="Filter" />
+							<div class="row mt-3">
+								<div class="col">
+									<button type="submit" id="createBtn" class="btn btn-primary">Create</button>
+									<a href="@Url.Action("Reports", "Reports")" id="cancelBtn" class="btn btn-outline">Cancel</a>
+								</div>
+							</div>
+						</form>
+
+					</div>
+				</div>
+			</div>
+
+			<div id="SelectedAssignees" style="display:none;"></div>
+			<div id="SelectedStatuses" style="display:none;"></div>
+
+		</div>
+	</div>
+
+	<script>
+		// Check if the report name already exists
+		$(document).ready(function () {
+			$('#createBtn').click(function (e) {
+				e.preventDefault();
+				var reportName = $('#firstName').val(); // Assuming this is the input for ReportName
+				$.ajax({
+					url: '@Url.Action("CheckReportName", "Reports")',
+					type: 'GET',
+					data: { reportName: reportName },
+					success: function (result) {
+						if (result.exists) {
+							$('#errorMessage').text('Report name already exists. Please choose a different name.').show();
+						} else {
+							$('form').submit(); // Submit the form if the report name doesn't exist
+						}
+					}
+				});
+			});
+		});
+	</script>
+
+	<script>
+
+		document.addEventListener("DOMContentLoaded", function () {
+			function initializeDropdown(dropdownId, searchFieldId, selectedContainerId, originalButtonText) {
+				const dropdown = document.getElementById(dropdownId);
+				const dropdownBtn = dropdown.querySelector('.dropbtn');
+				const dropdownContent = dropdown.querySelector('.dropdown-content');
+				const checkboxes = dropdown.querySelectorAll('.dropdown-content input[type="checkbox"]:not(.select-all-checkbox)');
+				const selectAllCheckbox = dropdown.querySelector('.select-all-checkbox');
+				const selectedContainer = document.getElementById(selectedContainerId);
+				const dropdownIcon = dropdownBtn.querySelector('.bi');
+
+				dropdownBtn.textContent = originalButtonText;
+				dropdownBtn.appendChild(dropdownIcon);
+
+				dropdownBtn.addEventListener('click', function () {
+					const isVisible = dropdownContent.style.display === 'block';
+					dropdownContent.style.display = isVisible ? 'none' : 'block';
+					dropdownIcon.classList.toggle('bi-chevron-down', isVisible);
+					dropdownIcon.classList.toggle('bi-chevron-up', !isVisible);
+				});
+
+				function updateButtonText() {
+					const selectedLabels = [];
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							selectedLabels.push(checkbox.parentNode.textContent.trim());
+						}
+					});
+
+					let buttonText;
+					if (selectedLabels.length === 0) {
+						buttonText = originalButtonText;
+					} else {
+						buttonText = selectedLabels.join(', ');
+						if (buttonText.length > 20) {
+							buttonText = buttonText.slice(0, 18) + '...';
+						}
+					}
+
+					dropdownBtn.textContent = buttonText;
+					dropdownBtn.appendChild(dropdownIcon);
+
+					updateSelectedOptions();
+				}
+
+				function handleCheckboxChange() {
+					selectedContainer.innerHTML = '';
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							const label = checkbox.parentNode.textContent.trim();
+							const selectedItem = document.createElement('div');
+							selectedItem.textContent = label;
+							selectedContainer.appendChild(selectedItem);
+						}
+					});
+
+					// Update Select All checkbox state
+					const allChecked = Array.from(checkboxes).every(function (checkbox) {
+						return checkbox.checked;
+					});
+					selectAllCheckbox.checked = allChecked;
+
+					updateButtonText();
+					localStorage.setItem(dropdownId + '_isOpen', dropdownContent.style.display === 'block');
+				}
+
+				checkboxes.forEach(function (checkbox) {
+					checkbox.addEventListener('change', handleCheckboxChange);
+				});
+
+				selectAllCheckbox.addEventListener('change', function () {
+					const isChecked = this.checked;
+					checkboxes.forEach(function (checkbox) {
+						checkbox.checked = isChecked;
+					});
+					handleCheckboxChange();
+				});
+
+				document.addEventListener('click', function (event) {
+					const target = event.target;
+					if (!dropdownContent.contains(target) && !dropdownBtn.contains(target)) {
+						dropdownContent.style.display = 'none';
+						dropdownIcon.classList.add('bi-chevron-down');
+						dropdownIcon.classList.remove('bi-chevron-up');
+						localStorage.removeItem(dropdownId + '_isOpen');
+					}
+				});
+
+				const isOpen = localStorage.getItem(dropdownId + '_isOpen');
+				if (isOpen === 'true') {
+					dropdownContent.style.display = 'block';
+					dropdownIcon.classList.remove('bi-chevron-down');
+					dropdownIcon.classList.add('bi-chevron-up');
+				}
+
+				updateButtonText();
+			}
+
+			function updateSelectedOptions() {
+				const selectedAssignees = Array.from(document.querySelectorAll('#projectFilterDropdown .dropdown-content input[type="checkbox"]:not(.select-all-checkbox):checked'))
+					.map(checkbox => checkbox.parentNode.textContent.trim());
+				const selectedStatuses = Array.from(document.querySelectorAll('#statusFilterDropdown .dropdown-content input[type="checkbox"]:not(.select-all-checkbox):checked'))
+					.map(checkbox => checkbox.parentNode.textContent.trim());
+
+				// document.getElementById('SelectedOptions').value = 'Assignee: ' + selectedAssignees.join(', ') + ' | ' + 'Status: ' + selectedStatuses.join(', ');
+				document.getElementById('SelectedOptions').value = 'Assignee: ' + selectedAssignees.map(a => `'${a}'`).join(', ') + ' | ' + 'Status: ' + selectedStatuses.map(s => `'${s}'`).join(', ');
+			}
+
+			// Initialize both dropdowns
+			initializeDropdown('projectFilterDropdown', 'assigneeSearch', 'SelectedAssignees', 'Select Assignee');
+			initializeDropdown('statusFilterDropdown', 'statusSearch', 'SelectedStatuses', 'Select Status');
+
+			// Filter functionality for both dropdowns
+			function filterDropdown(dropdownId, searchFieldId) {
+				const dropdown = document.getElementById(dropdownId);
+				const searchField = document.getElementById(searchFieldId);
+				searchField.addEventListener('input', function () {
+					const searchText = this.value.toLowerCase();
+					const checkboxes = dropdown.querySelectorAll('.dropdown-content label');
+					checkboxes.forEach(function (label) {
+						const text = label.textContent.toLowerCase();
+						if (text.includes(searchText)) {
+							label.style.display = 'block';
+						} else {
+							label.style.display = 'none';
+						}
+					});
+				});
+			}
+
+			filterDropdown('projectFilterDropdown', 'assigneeSearch');
+			filterDropdown('statusFilterDropdown', 'statusSearch');
+		});
+
+
+
+
+
+
+	</script>
+
+</body>
+</html>

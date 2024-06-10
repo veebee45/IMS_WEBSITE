@@ -1,0 +1,351 @@
+﻿@using System.Data
+@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="refresh" content="5">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<title>Tasks</title>
+
+	<style>
+		:root {
+			--Red: hsl(1, 90%, 64%);
+			--Blue: hsl(219, 85%, 26%);
+			--White: hsl(0, 0%, 100%);
+			--Very-light-grayish-blue: hsl(210, 60%, 98%);
+			--Light-grayish-blue-1: hsl(211, 68%, 94%);
+			--Light-grayish-blue-2: hsl(205, 33%, 90%);
+			--Grayish-blue: hsl(219, 14%, 63%);
+			--Dark-grayish-blue: hsl(219, 12%, 42%);
+			--Very-dark-blue: hsl(224, 21%, 14%);
+		}
+
+		.container {
+			background-color: var(--White);
+			padding: 1.5rem 1rem;
+			border-radius: 0.5rem;
+			box-shadow: 0 0 10px rgba(117, 117, 117, 0.5);
+		}
+
+		header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 2rem;
+		}
+
+		.notif_box {
+			display: flex;
+			align-items: center;
+		}
+
+		#notifes {
+			background-color: var(--Blue);
+			margin-left: 0.5rem;
+			width: 60px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 30px;
+			color: var(--White);
+			font-weight: 800;
+			border-radius: 0.5rem;
+		}
+
+		#notifes1 {
+			background-color: var(--Blue);
+			margin-left: 0.5rem;
+			width: 60px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			height: 30px;
+			color: var(--White);
+			font-weight: 800;
+			border-radius: 0.5rem;
+		}
+
+		#mark_all {
+			cursor: pointer;
+		}
+
+			#mark_all:hover {
+				color: var(--Blue);
+			}
+
+		p {
+			color: var(--Dark-grayish-blue);
+		}
+
+		main {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.notif_card {
+			display: flex;
+			align-items: center;
+			border-radius: 0.5rem;
+			padding: 1rem;
+			cursor: pointer;
+		}
+
+		img {
+			width: 50px;
+		}
+
+		.description {
+			margin-left: 1rem;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		strong {
+			color: var(--Very-dark-blue);
+			cursor: pointer;
+		}
+
+			strong:hover {
+				color: var(--Blue);
+			}
+
+		.unread {
+			background-color: var(--Light-grayish-blue-1) !important;
+			cursor: pointer;
+		}
+
+			.unread p:first-of-type::after {
+				content: " ";
+				background-color: var(--Red);
+				width: 10px;
+				height: 10px;
+				display: inline-block;
+				border-radius: 50%;
+			}
+
+		.read {
+			background-color: var(--White) !important;
+			cursor: pointer;
+		}
+
+			.read p:first-of-type::after {
+				content: " ";
+				background-color: #008000;
+				width: 10px;
+				height: 10px;
+				display: inline-block;
+				border-radius: 50%;
+			}
+
+		.message_card {
+			display: flex;
+			align-items: center;
+		}
+
+		.message {
+			padding: 1rem;
+			border: 1px solid var(--Light-grayish-blue-2);
+			border-radius: .3rem;
+			cursor: pointer;
+			margin: 0 0 0 5rem;
+		}
+
+			.message:hover {
+				background-color: var(--Light-grayish-blue-1);
+			}
+
+		.chess_img {
+			margin-left: auto;
+		}
+
+		.pagination {
+			display: flex;
+			justify-content: center;
+			margin-top: 20px;
+		}
+
+			.pagination a {
+				margin: 0 5px;
+				padding: 5px 10px;
+				border: 1px solid #ccc;
+				text-decoration: none;
+				color: #333;
+			}
+
+				.pagination a.active {
+					background-color: #7986CB;
+					color: white;
+				}
+
+				.pagination a:hover {
+					background-color: #555;
+					color: white;
+				}
+
+	</style>
+
+</head>
+
+<body>
+
+	<div class="container">
+		<header>
+			<div class="notif_box">
+				<h2 class="title">All Notifications</h2>
+				<span id="notifes"></span>
+			</div>
+			<div class="notif_box">
+				<h2 class="title">Unread Notifications</h2>
+				<span id="notifes1"></span>
+			</div>
+		</header>
+		<main>
+			@foreach (var projectInfo in Model.Projects)
+			{
+				var names = projectInfo.Assigner.Split(' ');
+				var firstName = names[0];
+				var lastName = names.Length > 1 ? names[1] : "";
+
+				@if (projectInfo.Flag == "False")
+				{
+					<div class="notif_card read" onclick="handleRowClick('@projectInfo.NID', '@projectInfo.ProjectID')">
+						<span style="border:1px solid gray;padding:4px;border-radius:10px;background-color:#7986CB;color:#fff;margin-right:10px">@firstName[0]@lastName[0]</span>
+						<div class="description">
+							<p class="user_activity">
+
+								@if (Context.Session.GetString("UserRole") == "Super Admin")
+								{
+
+									<strong>@projectInfo.Assigner</strong> @projectInfo.Message
+
+									@if (!projectInfo.Message.Contains("deleted"))
+									{
+										@if (projectInfo.Assignee == projectInfo.Assigner)
+										{
+											<b>himself</b>
+										}
+										else
+										{
+											<b>@projectInfo.Assignee</b>
+										}
+									}
+								}
+								@if (Context.Session.GetString("UserRole") != "Super Admin")
+								{
+									<strong>@projectInfo.Assigner</strong>  @projectInfo.Message
+									@if (!projectInfo.Message.Contains("deleted"))
+									{
+									<p>you.</p>
+									}
+
+								}
+							</p>
+							<p class="time">@projectInfo.create_at</p>
+						</div>
+					</div>
+					<hr />
+				}
+				else
+				{
+					<div class="notif_card unread" onclick="handleRowClick('@projectInfo.NID', '@projectInfo.ProjectID')">
+						<span style="border:1px solid gray;padding:4px;border-radius:10px;background-color:#7986CB;color:#fff;margin-right:10px">@firstName[0]@lastName[0]</span>
+						<div class="description">
+							<p class="user_activity">
+
+								@if (Context.Session.GetString("UserRole") == "Super Admin")
+								{
+
+									<strong>@projectInfo.Assigner</strong> @projectInfo.Message
+
+									@if (!projectInfo.Message.Contains("deleted"))
+									{
+										@if (projectInfo.Assignee == projectInfo.Assigner)
+										{
+											<b>himself</b>
+										}
+										else
+										{
+											<b>@projectInfo.Assignee</b>
+										}
+									}
+								}
+								@if (Context.Session.GetString("UserRole") != "Super Admin")
+								{
+									<strong>@projectInfo.Assigner</strong>  @projectInfo.Message
+									@if (!projectInfo.Message.Contains("deleted"))
+									{
+									<p>you.</p>
+									}
+
+								}
+							</p>
+							<p class="time">@projectInfo.create_at</p>
+						</div>
+					</div>
+					<hr />
+				}
+
+			}
+			<!-- Pagination Controls -->
+			<div class="pagination">
+				@if (Model.CurrentPage > 1)
+				{
+					<a asp-action="Notifications" asp-route-pageNumber="@(Model.CurrentPage - 1)" asp-route-pageSize="@ViewData["PageSize"]">Previous</a>
+				}
+
+				@for (int i = 1; i <= Model.TotalPages; i++)
+				{
+					<a asp-action="Notifications" asp-route-pageNumber="@i" asp-route-pageSize="@ViewData["PageSize"]" class="@(i == Model.CurrentPage ? "active" : "")">@i</a>
+				}
+
+				@if (Model.CurrentPage < Model.TotalPages)
+				{
+					<a asp-action="Notifications" asp-route-pageNumber="@(Model.CurrentPage + 1)" asp-route-pageSize="@ViewData["PageSize"]">Next</a>
+				}
+			</div>
+
+
+		</main>
+	</div>
+
+	<script>
+		function handleRowClick(NID, projectID) {
+			$.ajax({
+				type: "POST",
+				url: "/Notifications/ChangeFlag",
+				data: { ID: NID },
+				success: function () {
+					// Redirect to the details page after the flag is changed
+					window.location.href = '/Tasks/Details/' + projectID;
+				},
+				error: function (xhr, status, error) {
+					console.error("Error changing flag:", error);
+				}
+			});
+		}
+
+		const unreadMessages = document.querySelectorAll(".unread");
+		const readMessages = document.querySelectorAll(".notif_card");
+		const unread = document.getElementById("notifes1");
+		const read = document.getElementById("notifes");
+		unread.innerText = unreadMessages.length
+		read.innerText = readMessages.length
+
+		function getUserInitial(username) {
+			var words = username.split(" ");
+			var firstInitial = words[0].charAt(0).toUpperCase();
+			var secondInitial = words.length > 1 ? words[1].charAt(0).toUpperCase() : "";
+			return firstInitial + secondInitial;
+		}
+
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,605 @@
+﻿@using System.Data
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+@foreach (DataRow row in Model.DataTable1.Rows)
+{
+    <section class="stat-icons-wrapper">
+        <div class="stat-icons">
+            <div class="rectangle-parent">
+                <div class="frame-child"></div>
+                <img class="raphaelusers-icon"
+                loading="lazy"
+                alt=""
+                src="~/images/raphaelusers.svg" />
+
+                <div class="metric-labels">
+                    <b class="total-users">Total Users</b>
+                    <b class="delimiter"><a href="/Users/Users">@row["Total_Users"]</a></b>
+                </div>
+            </div>
+            <div class="rectangle-group">
+                <div class="frame-item"></div>
+                <div class="project-names">
+                    <img class="octiconproject-roadmap-16"
+                    alt=""
+                    src="~/images/octiconprojectroadmap16.svg" />
+                </div>
+                <div class="total-projects-parent">
+                    <b class="total-projects">Total Projects</b>
+                    <b class="b"><a href="/Projects/Projects">@row["Total_Projects"]</a></b>
+                </div>
+            </div>
+            <div class="rectangle-container">
+                <div class="frame-inner"></div>
+                <img class="mdireport-box-icon1"
+                alt=""
+                src="~/images/mdireportbox-1.svg" />
+
+                <div class="projects1">
+                    <div class="total-tasks-parent">
+                        <b class="total-tasks">Total Tasks</b>
+                        <b class="stat-separator"><a href="/Tasks/Tasks">@row["Total_Tasks"]</a></b>
+                    </div>
+                </div>
+            </div>
+            <div class="frame-div">
+                <div class="rectangle-div"></div>
+                <img class="streamlinestrategy-tasks-soli-icon"
+                alt=""
+                src="~/images/streamlinestrategytaskssolid.svg" />
+
+                <div class="details">
+                    <b class="critical-tasks">Critical Tasks</b>
+                    <b class="b1"><a href="/Tasks/Tasks?priorities=Critical&page=1&pageSize=15">@row["Critical_Tasks"]</a></b>
+                </div>
+            </div>
+            <div class="rectangle-parent1">
+                <div class="frame-child1"></div>
+                <img class="mdireport-box-icon2"
+                alt=""
+                src="~/images/mdireportbox-1.svg" />
+
+                <div class="stat-name">
+                    <b class="open-tasks">Open Tasks</b>
+                    <b class="b2"><a href="/Tasks/Tasks?statuses=Open&page=1&pageSize=15">@row["Open_Tasks"]</a></b>
+                </div>
+            </div>
+            <div class="rectangle-parent2">
+                <div class="frame-child2"></div>
+                <img class="mdireport-box-icon3"
+                alt=""
+                src="~/images/mdireportbox-1.svg" />
+
+                <div class="closed-tasks-parent">
+                    <b class="closed-tasks">Closed Tasks</b>
+                    <b class="b3"><a href="/Tasks/Tasks?statuses=Done&page=1&pageSize=15">@row["Closed_Tasks"]</a></b>
+                </div>
+            </div>
+            <div class="rectangle-parent3">
+                <div class="frame-child3"></div>
+                <img class="mdireport-box-icon4"
+                alt=""
+                src="~/images/mdireportbox-1.svg" />
+
+                <div class="project-data">
+                    <div class="to-verify-tasks-parent">
+                        <b class="to-verify-tasks">To Verify Tasks</b>
+                        <b class="b4"><a href="/Tasks/Tasks?statuses=To+Verify&page=1&pageSize=15">@row["To_Verify_Tasks"]</a></b>
+                    </div>
+                </div>
+            </div>
+            <div class="rectangle-parent4">
+                <div class="frame-child4"></div>
+                <img class="mdireport-box-icon5"
+                alt=""
+                src="~/images/mdireportbox-1.svg" />
+
+                <div class="show-stopper-parent">
+                    <b class="show-stopper">Show Stopper Tasks</b>
+                    <b class="b5"><a href="/Tasks/Tasks?priorities=Show+Stopper&page=1&pageSize=15">@row["Show_Stopper_Tasks"]</a></b>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+     
+     <section class="user-task-details_New">
+        <div class="project-data1New">
+            <div class="project-data-child"></div>
+            <div class="data-summary2">
+                <b class="frequently-received-projects">Departmental Comparison</b>
+            </div>
+
+            <div style="display:flex;margin-left: 60px;">
+             <div class="dropdown" id="projectFilterDropdown" style="margin-right:10px;">
+							<button class="dropbtn" type="button" style="width:130px;display:flex;align-items:center;justify-content:space-between">
+								<span style="order:1">All Projects</span>
+								<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+							</button>
+							<div class="dropdown-content">
+								<input class="searchfield" type="text" id="projectSearch" placeholder="Search Project..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+
+								<label>
+									<input type="checkbox" id="selectAllProjects" class="filter-checkbox" id="_selectall" onclick="toggleAllProjects(this)">
+									Select All
+								</label>
+
+								@foreach (var project in ViewBag.UniqueProjects)
+								{
+									<label>
+										<input type="checkbox" name="projects" value="@project" @(ViewBag.SelectedProjects != null && ViewBag.SelectedProjects.Contains(project) ? "checked" : "") class="filter-checkbox project-checkbox">
+										@project
+									</label>
+								}
+							</div>
+			</div>
+            <div class="dropdown" id="statusFilterDropdown" style="margin-right:10px;">
+							<button class="dropbtn" type="button" style="width:140px;display:flex;align-items:center;justify-content:space-between">
+								<span style="order:1">Time Frame</span>
+								<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+							</button>
+							<div class="dropdown-content">
+								<input class="searchfield" type="text" id="statusSearch" placeholder="Search Status..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid gray;">
+
+								<label>
+									<input type="checkbox" id="selectAllStatuses" class="filter-checkbox" id="status_selectall" onclick="toggleAllStatuses(this)">
+									Select All
+								</label>
+
+								@foreach (var status in new[] { "Last Week", "Last Month", "Select Date", "Custom" })
+								{
+									<label>
+										<input type="checkbox" name="statuses" value="@status" @(ViewBag.SelectedStatuses != null && ViewBag.SelectedStatuses.Contains(status) ? "checked" : "") class="filter-checkbox status-checkbox">
+										@status
+									</label>
+								}
+							</div>
+			</div>
+            @* <button class="btn btn-outline-danger btn-sm" onclick="clearAllFilters()" id="clearFiltersButton" style="align-items:center; white-space: nowrap;  width:auto;  ">Clear Filters</button>
+ *@
+            </div>
+            <div id="selectedStatus" style="display:none;"></div>
+            <div id="selectedProjects" style="display:none;"></div>
+
+            <canvas id="myPieChart" style="margin-top:50px"></canvas>
+        </div>
+
+        <div class="project-data1New">
+            <div class="project-data-child"></div>
+            <div class="data-summary2">
+                <b class="frequently-received-projects">Tasks Pending Per Team</b>
+            </div>
+            <canvas id="myPieChart1"></canvas>
+        </div>
+
+        <div class="project-data1New">
+            <div class="project-data-child"></div>
+            <div class="data-summary2">
+                <b class="frequently-received-projects">Project Wise Data Split</b>
+            </div>
+            <canvas id="myPieChart2"></canvas>
+        </div>
+
+     </section>
+
+<section class="user-task-details">
+    <div class="task-table">
+        <div class="task-table-header">
+            <div class="table-columns">
+                <div class="user-data-parent">
+
+                    <table>
+                        <tr>
+                            <td colspan="5" class="merged arrow">
+                                <b>Assigned Tasks </b>
+                                <img src="~/Images/makiarrow.svg" alt="Arrow" width="20" height="20">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Department</th>
+                            <th>Total Tasks</th>
+                            <th>Pending Tasks</th>
+                            <th>Closed Tasks</th>
+                        </tr>
+
+                        @foreach (DataRow row in Model.DataTable2.Rows)
+                        {
+                            var names = row["UserName"].ToString().Split(' ');
+				            var firstName = names[0];
+				            var lastName = names.Length > 1 ? names[1] : "";
+
+                            <tr>
+                                <td>@row["UserName"]</td>
+                                <td>@row["UserRole"]</td>
+                                <td><a href="/Tasks/Tasks?assignees=@firstName+@lastName&page=1&pageSize=15">@row["TotalTasks"]</a></td>
+                                <td><a href="/Tasks/Tasks?assignees=@firstName+@lastName&statuses=Open&statuses=In+Progress&statuses=To+Verify&statuses=On+Hold&page=1&pageSize=15">@row["PendingTasks"]</a></td>
+                                <td><a href="/Tasks/Tasks?assignees=@firstName+@lastName&statuses=Done&page=1&pageSize=15">@row["DoneTasks"]</a></td>
+                            </tr>
+                        }
+
+                    </table>
+                    
+                </div>
+            </div>
+            <div class="table-columns1">
+                <div class="frame-parent">
+                    
+                    <table>
+                        <tr>
+                            <td colspan="4" class="merged arrow">
+                                <b>Project Wise Data Summary </b>
+                                <img src="~/Images/makiarrow.svg" alt="Arrow" width="20" height="20">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Total Data Received</th>
+                            <th>Total Rejected Data</th>
+                            <th>Total Processed Data</th>
+                        </tr>
+
+                        @foreach (DataRow row in Model.DataTable3.Rows)
+                        {
+                            <tr>
+                                <td>@row["Project"]</td>
+                                <td>@string.Format("{0:N}",@row["TotalData"])</td>
+                                <td>@string.Format("{0:N}", @row["RejectedData"])</td>
+                                <td>@string.Format("{0:N}",@row["ProcessedData"])</td>
+                            </tr>
+                        }
+                    </table>
+
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</section>
+
+    <script>
+    var projects = [];
+    var totalCounts = [];
+
+    var teamsName = [];
+    var taskCounts = [];
+
+    @foreach (var item in Model.ListData)
+    {
+        <text>projects.push('@item.Project'); </text>
+        <text>totalCounts.push('@item.totaldata');</text>
+    }
+
+    @foreach (var item in Model.ListData1)
+    {
+        <text>teamsName.push('@item.TeamName'); </text>
+        <text>taskCounts.push('@item.PendingTask');</text>
+    }
+
+    const data = {
+        labels: projects,
+        datasets: [{
+            label: 'Data Count',
+            data: totalCounts,
+            backgroundColor: [
+                'rgba(44, 62, 80, 0.8)',    // Dark Blue
+                'rgba(39, 174, 96, 0.8)',   // Dark Green
+                'rgba(192, 57, 43, 0.8)',   // Dark Red
+                'rgba(142, 68, 173, 0.8)',  // Dark Purple
+                'rgba(41, 128, 185, 0.8)'   // Dark Sky Blue
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    const data0 = {
+        labels: ["Data Team","Production Team","Devlopement Team","Dispatch Team"],
+        datasets: [{
+            label: 'Time Chart',
+            data: [10,12,5,20],
+            backgroundColor: [
+                'rgba(44, 62, 80, 0.8)',    // Dark Blue
+                'rgba(39, 174, 96, 0.8)',   // Dark Green
+                'rgba(192, 57, 43, 0.8)',   // Dark Red
+                'rgba(142, 68, 173, 0.8)',  // Dark Purple
+                'rgba(41, 128, 185, 0.8)'   // Dark Sky Blue
+            ],
+            hoverOffset: 4
+        }]
+    };
+
+    const data1 = {
+        labels: teamsName,
+        datasets: [{
+            label: 'Data Count',
+            data: taskCounts,
+            backgroundColor: [
+    'rgba(241, 196, 15, 0.8)',  // Dark Yellow
+    'rgba(211, 84, 0, 0.8)',    // Dark Orange
+    'rgba(22, 160, 133, 0.8)',  // Dark Cyan
+    'rgba(136, 78, 160, 0.8)',  // Dark Magenta
+    'rgba(127, 140, 141, 0.8)'  // Dark Gray
+],
+            hoverOffset: 4
+        }]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data0,
+        options: {
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    grid: {                  
+                            display: false
+
+                           }
+                },
+                y: {
+                    grid: {                  
+                            display: false
+
+                           }
+                }
+            }
+        },
+            plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom',
+                        align: 'center',
+                        labels: {
+                            boxWidth: 20, // Adjust box width to ensure line-by-line display
+                            padding: 20,
+                            generateLabels: function(chart) {
+                                const data = chart.data;
+                                if (data.labels.length && data.datasets.length) {
+                                    const dataset = data.datasets[0];
+                                    const total = dataset.data.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue), 0);
+
+                                    return data.labels.map((label, i) => {
+                                        const value = dataset.data[i];
+                                        const percentage = ((value / total) * 100).toFixed(2) + '%';
+                                        return {
+                                            text: `${label} (${percentage})`,
+                                            fillStyle: dataset.backgroundColor[i],
+                                            strokeStyle: dataset.backgroundColor[i],
+                                            lineWidth: 1,
+                                            hidden: isNaN(dataset.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+                                            index: i
+                                        };
+                                    });
+                                }
+                                return [];
+                            }
+                        }
+                    }
+                }
+    };
+
+    const config1 = {
+        type: 'pie',
+        data: data,
+        options: {
+            layout: {
+                padding: {
+                    bottom: 10 // Adjust this value to increase or decrease the margin between the chart and the legend
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    align: 'center',
+                    labels: {
+                        boxWidth: 20, // Adjust box width to ensure line-by-line display
+                        padding: 20,
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            if (data.labels.length && data.datasets.length) {
+                                const dataset = data.datasets[0];
+                                const total = dataset.data.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue), 0);
+
+                                return data.labels.map((label, i) => {
+                                    const value = dataset.data[i];
+                                    const percentage = ((value / total) * 100).toFixed(2) + '%';
+                                    return {
+                                        text: `${label} (${percentage})`,
+                                        fillStyle: dataset.backgroundColor[i],
+                                        strokeStyle: dataset.backgroundColor[i],
+                                        lineWidth: 1,
+                                        hidden: isNaN(dataset.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+                                        index: i
+                                    };
+                                });
+                            }
+                            return [];
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    const config2 = {
+        type: 'pie',
+        data: data1,
+        options: {
+            layout: {
+                padding: {
+                    bottom: 10 // Adjust this value to increase or decrease the margin between the chart and the legend
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    align: 'center',
+                    labels: {
+                        boxWidth: 20, // Adjust box width to ensure line-by-line display
+                        padding: 20,
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            if (data.labels.length && data.datasets.length) {
+                                const dataset = data.datasets[0];
+                                const total = dataset.data.reduce((accumulator, currentValue) => accumulator + parseFloat(currentValue), 0);
+
+                                return data.labels.map((label, i) => {
+                                    const value = dataset.data[i];
+                                    const percentage = ((value / total) * 100).toFixed(2) + '%';
+                                    return {
+                                        text: `${label} (${percentage})`,
+                                        fillStyle: dataset.backgroundColor[i],
+                                        strokeStyle: dataset.backgroundColor[i],
+                                        lineWidth: 1,
+                                        hidden: isNaN(dataset.data[i]) || chart.getDatasetMeta(0).data[i].hidden,
+                                        index: i
+                                    };
+                                });
+                            }
+                            return [];
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    // Initialize the first pie chart
+    const ctx = document.getElementById('myPieChart').getContext('2d');
+    const myPieChart = new Chart(ctx, config);
+
+    // Initialize the first pie chart
+    const ctx1 = document.getElementById('myPieChart2').getContext('2d');
+    const myPieChart1 = new Chart(ctx1, config1);
+
+    // Initialize the second pie chart
+    const ctx2 = document.getElementById('myPieChart1').getContext('2d');
+    const myPieChart2 = new Chart(ctx2, config2);
+
+    // Repeat for additional charts as needed
+
+    		// _____________ Select all option______________
+		function toggleAll(source) {
+			checkboxes = document.getElementsByClassName('assignee-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			document.getElementById('assignee_selectall').checked = true;
+		}
+		function toggleAllProjects(source) {
+			checkboxes = document.getElementsByClassName('project-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			$('#project_selectall').prop('checked', true);
+		}
+		function toggleAllStatuses(source) {
+			checkboxes = document.getElementsByClassName('status-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			$('#status_selectall').prop('checked', true);
+		}
+	 
+		function toggleAllPriorities(source) {
+			checkboxes = document.getElementsByClassName('priority-checkbox');
+			for (var i = 0, n = checkboxes.length; i < n; i++) {
+				checkboxes[i].checked = source.checked;
+			}
+			$('#priorities_selectall').prop('checked', true);
+		}
+    document.addEventListener("DOMContentLoaded", function () {
+			function initializeDropdown(dropdownId, selectedContainerId, originalButtonText) {
+				const dropdown = document.getElementById(dropdownId);
+				const dropdownBtn = dropdown.querySelector('.dropbtn');
+				const dropdownContent = dropdown.querySelector('.dropdown-content');
+				const checkboxes = dropdown.querySelectorAll('.dropdown-content input[type="checkbox"]');
+				const selectedContainer = document.getElementById(selectedContainerId);
+				const dropdownIcon = dropdownBtn.querySelector('.bi');
+
+				dropdownBtn.textContent = originalButtonText;
+				dropdownBtn.appendChild(dropdownIcon);
+
+				dropdownBtn.addEventListener('click', function () {
+					const isVisible = dropdownContent.style.display === 'block';
+					dropdownContent.style.display = isVisible ? 'none' : 'block';
+					dropdownIcon.classList.toggle('bi-chevron-down', isVisible);
+					dropdownIcon.classList.toggle('bi-chevron-up', !isVisible);
+				});
+
+				function updateButtonText() {
+					const selectedLabels = [];
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							selectedLabels.push(checkbox.parentNode.textContent.trim());
+						}
+					});
+
+					let buttonText;
+					if (selectedLabels.length === 0) {
+						buttonText = originalButtonText;
+					} else {
+						buttonText = selectedLabels.join(', ');
+						if (buttonText.length > 20) {
+							buttonText = buttonText.slice(0, 18) + '...';
+						}
+					}
+
+					dropdownBtn.textContent = buttonText;
+					dropdownBtn.appendChild(dropdownIcon);
+				}
+
+				function handleCheckboxChange() {
+					selectedContainer.innerHTML = '';
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							const label = checkbox.parentNode.textContent.trim();
+							const selectedItem = document.createElement('div');
+							selectedItem.textContent = label;
+							selectedContainer.appendChild(selectedItem);
+						}
+					});
+					updateButtonText();
+					localStorage.setItem(dropdownId + '_isOpen', dropdownContent.style.display === 'block');
+				}
+
+				checkboxes.forEach(function (checkbox) {
+					checkbox.addEventListener('change', handleCheckboxChange);
+				});
+
+				document.addEventListener('click', function (event) {
+					const target = event.target;
+					if (!dropdownContent.contains(target) && !dropdownBtn.contains(target)) {
+						dropdownContent.style.display = 'none';
+						dropdownIcon.classList.add('bi-chevron-down');
+						dropdownIcon.classList.remove('bi-chevron-up');
+						localStorage.removeItem(dropdownId + '_isOpen');
+					}
+				});
+
+				const isOpen = localStorage.getItem(dropdownId + '_isOpen');
+				if (isOpen === 'true') {
+					dropdownContent.style.display = 'block';
+					dropdownIcon.classList.remove('bi-chevron-down');
+					dropdownIcon.classList.add('bi-chevron-up');
+				}
+
+				updateButtonText();
+			}
+
+			 
+			initializeDropdown('statusFilterDropdown', 'selectedStatus', 'Time Frame');
+			 
+			initializeDropdown('projectFilterDropdown', 'selectedProjects', 'All Projects'); // Corrected container ID
+		});
+
+</script>
+
+
+
+         
