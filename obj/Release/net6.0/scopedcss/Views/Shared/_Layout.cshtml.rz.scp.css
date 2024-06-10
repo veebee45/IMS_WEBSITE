@@ -15,13 +15,13 @@
     }
 
         .sidebar ul li[b-17fbvsslgv] {
-            padding: 10px;
+            padding: 5px;
         }
 
             .sidebar ul li a[b-17fbvsslgv] {
                 text-decoration: none;
                 color: black;
-                font-size: 15px;
+                font-size: 18px;
                 font-family: 'Solway', sans-serif;
                 font-weight: 500;
             }
@@ -31,13 +31,14 @@
                 }
 
                 .sidebar ul li a.active-link[b-17fbvsslgv] {
+                    background-color: #A5B7F6;
                     color: black;
                     font-weight: 900;
                 }
-
+notificationBadge
 .active-link[b-17fbvsslgv] {
     border: 1px solid #fff;
-    background-color: #fff;
+    background-color: #A5B7F6;
     padding: 8px 20px;
     border-radius: 5px;
 }
@@ -51,8 +52,7 @@
 }
 
 nav[b-17fbvsslgv] {
-    background-color: none;
-    height: 78px;
+    height: 100px;
     width: 100%;
 }
 

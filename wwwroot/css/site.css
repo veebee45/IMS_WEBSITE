@@ -215,14 +215,6 @@ body {
     flex-shrink: 0;
 }
 
-.dashboard {
-    position: relative;
-    font-size: var(--font-size-11xl);
-    font-family: var(--font-solway);
-    color: var(--color-black);
-    text-align: left;
-}
-
 .icon-names,
 .icon-symbols {
     display: flex;
@@ -639,10 +631,11 @@ body {
 }
 
 .raphaelusers-icon {
-    height: 80px;
-    width: 80px;
+    height: 50px;
+    width: 60px;
     overflow: hidden;
     flex-shrink: 0;
+    margin-bottom:10px;
 }
 
 .delimiter,
@@ -650,6 +643,7 @@ body {
 .total-users {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .delimiter {
@@ -692,12 +686,13 @@ body {
 }
 
 .octiconproject-roadmap-16 {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 40px;
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
     z-index: 1;
+    margin-left:-10px;
 }
 
 .project-names {
@@ -706,12 +701,15 @@ body {
     align-items: flex-start;
     justify-content: flex-start;
     padding: var(--padding-5xs) 0 0;
+    width: 60px;
+    height: 50px;
 }
 
 .b,
 .total-projects {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .b {
@@ -727,6 +725,7 @@ body {
     align-items: flex-start;
     justify-content: flex-start;
     gap: var(--gap-9xs);
+    margin-left: -30px;
 }
 
 .frame-inner,
@@ -745,6 +744,7 @@ body {
     padding: var(--padding-2xl) var(--padding-5xl) var(--padding-4xl);
     box-sizing: border-box;
     gap: var(--gap-6xl);
+    height:116px;
 }
 
 .frame-inner {
@@ -754,11 +754,12 @@ body {
 }
 
 .mdireport-box-icon1 {
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 50px;
     overflow: hidden;
     flex-shrink: 0;
-    min-height: 80px;
+    min-height: 60px;
+    margin-bottom:10px;
 }
 
 .mdireport-box-icon1,
@@ -766,6 +767,7 @@ body {
 .total-tasks {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .stat-separator {
@@ -807,6 +809,7 @@ body {
     padding: var(--padding-lgi) var(--padding-mid) var(--padding-2xl);
     box-sizing: border-box;
     gap: var(--gap-2xl);
+    height:116px;
 }
 
 .rectangle-div {
@@ -816,18 +819,20 @@ body {
 }
 
 .streamlinestrategy-tasks-soli-icon {
-    height: 80px;
-    width: 80px;
+    height: 50px;
+    width: 60px;
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
     z-index: 1;
+    margin-bottom:10px;
 }
 
 .b1,
 .critical-tasks {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .b1 {
@@ -849,7 +854,7 @@ body {
 .frame-div {
     width: 370px;
     border-radius: var(--br-xl);
-    background-color: var(--color-lightskyblue-100);
+    background-color: #ffa500b0;
     max-width: 100%;
 }
 
@@ -870,8 +875,8 @@ body {
 }
 
 .mdireport-box-icon2 {
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 50px;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -881,6 +886,7 @@ body {
 .open-tasks {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .b2 {
@@ -914,6 +920,7 @@ body {
     padding: var(--padding-mid) var(--padding-mid) var(--padding-4xl);
     box-sizing: border-box;
     gap: var(--gap-2xl);
+    height:116px;
 }
 
 .frame-child2 {
@@ -923,8 +930,8 @@ body {
 }
 
 .mdireport-box-icon3 {
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 50px;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -934,6 +941,7 @@ body {
 .mdireport-box-icon3 {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .b3 {
@@ -955,7 +963,7 @@ body {
 .rectangle-parent2 {
     width: 370px;
     border-radius: var(--br-xl);
-    background-color: var(--color-lightskyblue-100);
+    background-color: #00df78db;
     max-width: 100%;
 }
 
@@ -967,6 +975,7 @@ body {
     padding: var(--padding-2xl) var(--padding-mini) var(--padding-lgi);
     box-sizing: border-box;
     gap: 14px;
+    height:116px;
 }
 
 .frame-child3 {
@@ -976,8 +985,8 @@ body {
 }
 
 .mdireport-box-icon4 {
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 50px;
     overflow: hidden;
     flex-shrink: 0;
     min-height: 80px;
@@ -988,6 +997,7 @@ body {
 .to-verify-tasks {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .b4 {
@@ -1028,6 +1038,8 @@ body {
     padding: var(--padding-lgi) var(--padding-mid) var(--padding-2xl);
     box-sizing: border-box;
     gap: var(--gap-2xl);
+    height: 116px;
+    width:370px;
 }
 
 .frame-child4 {
@@ -1038,8 +1050,8 @@ body {
 }
 
 .mdireport-box-icon5 {
-    height: 80px;
-    width: 80px;
+    height: 70px;
+    width: 50px;
     overflow: hidden;
     flex-shrink: 0;
 }
@@ -1049,6 +1061,7 @@ body {
 .show-stopper {
     position: relative;
     z-index: 1;
+    font-size:24px;
 }
 
 .b5 {
@@ -1070,13 +1083,14 @@ body {
 .rectangle-parent4 {
     width: 370px;
     border-radius: var(--br-xl);
-    background-color: var(--color-lightskyblue-100);
+    background-color: #ff0000e3;
     flex-direction: row;
     align-items: flex-end;
     padding: var(--padding-mid) var(--padding-lg) var(--padding-4xl);
     box-sizing: border-box;
     gap: var(--gap-lgi);
     max-width: 100%;
+    height: 116px;
 }
 
 .stat-icons,
@@ -1705,6 +1719,7 @@ body {
     padding: var(--padding-mini) var(--padding-17xl) var(--padding-mini) var(--padding-18xl);
     white-space: nowrap;
     z-index: 1;
+    height: 116px;
 }
 
 .frame-child6 {
@@ -1775,6 +1790,7 @@ body {
     gap: var(--gap-xl);
     font-size: var(--font-size-6xl);
     color: var(--color-white);
+    height: 116px;
 }
 
 .frame-group,
@@ -1791,6 +1807,7 @@ body {
     position: relative;
     min-width: 171px;
     z-index: 2;
+    height: 116px;
 }
 
 .frame-group {
@@ -2115,7 +2132,7 @@ body {
 
 .task-table-header {
     flex: 1;
-    gap: 95px;
+    gap: 50px;
 }
 
 .project-data-child {
@@ -2132,6 +2149,7 @@ body {
 .frequently-received-projects {
     position: relative;
     z-index: 1;
+    margin-left: 50px;
 }
 
 .data-summary2 {
@@ -2241,7 +2259,7 @@ body {
 
 .project-data1,
 .project-stats,
-.r-g-p-v-container {
+.r-g-p-v-container, .project-data1New {
     display: flex;
     align-items: flex-start;
 }
@@ -2266,11 +2284,26 @@ body {
     min-width: 517px;
     max-width: 100%;
     font-size: var(--font-size-xl);
-    height:530px;
+    height: 808px;
+}
+.project-data1New {
+    width: 490px;
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.25);
+    border-radius: var(--br-3xs);
+    background-color: var(--color-white);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: var(--padding-32xl) 42px 127px 43px;
+    box-sizing: border-box;
+    gap: 10px;
+    min-width: 490px;
+    max-width: 100%;
+    font-size: var(--font-size-xl);
+    height: 550px;
 }
 
 .task-table,
-.user-task-details {
+.user-task-details, .user-task-details_New {
     display: flex;
     flex-direction: row;
     max-width: 100%;
@@ -2287,12 +2320,26 @@ body {
     align-self: stretch;
     align-items: flex-start;
     justify-content: flex-end;
-    padding: 20px 28px 0 var(--padding-10xl);
+    padding: 10px 45px 0 var(--padding-10xl);
     box-sizing: border-box;
     text-align: left;
     font-size: var(--font-size-3xl);
     color: var(--color-black);
     font-family: var(--font-solway);
+    margin-bottom:50px;
+}
+
+.user-task-details_New {
+    align-self: stretch;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 50px 45px 0 var(--padding-10xl);
+    box-sizing: border-box;
+    text-align: left;
+    font-size: var(--font-size-3xl);
+    color: var(--color-black);
+    font-family: var(--font-solway);
+    margin-bottom: 50px;
 }
 
 .dashboard-screen,
@@ -2352,10 +2399,10 @@ th, td {
     right: 10px;
     top: 50%;
     transform: translateY(-50%);
+    margin-top:-0px;
 }
-canvas {
-    max-width: 600px;
-    max-height: 600px;
-    margin-top:-50px;
-    margin-left:40px;
+
+img, svg {
+    vertical-align: middle;
+    margin-top: 8px;
 }

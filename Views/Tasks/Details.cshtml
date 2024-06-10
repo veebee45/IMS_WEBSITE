@@ -12,8 +12,21 @@
 	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<script src="~/ckeditor/ckeditor.js"></script>
 	<style>
-
+		.comments table, .comments th, .comments td {
+			border: 1px solid #000;
+			padding: 8px;
+		}
+		.content-display {
+			/* border: 1px solid #ddd; */
+			padding: 10px;
+			min-height: 200px;
+			background-color: #f9f9f9;
+		}
+	</style>
+	<style>
+		 
 		#editBtn {
 			font-size: 25px;
 		}
@@ -87,13 +100,13 @@
 		.file-info {
 			background-color: #fff;
 			padding: 5px 10px;
-			border: 1px solid black;
+			border: 1px solid gray;
 			border-radius: 5px;
 			margin-right: 5px;
 			font-weight: 500;
-			height:5rem;
-			width:7rem;
-			overflow:hidden;
+			height: 5rem;
+			width: 7rem;
+			overflow: hidden;
 			margin-bottom: 5px;
 		}
 
@@ -166,12 +179,12 @@
 		}
 
 		#projectChanges div {
-			padding:10px;
+			padding: 10px;
 		}
 
 			#projectChanges div b {
 				font-weight: bold;
-				margin-right:3px;
+				margin-right: 3px;
 			}
 
 			#projectChanges div span {
@@ -186,14 +199,13 @@
 
 		.projectChanges {
 			border: 1px solid #F2F3F4;
-			max-height: 500px;
 			border-radius: 8px;
 			padding: 20px;
 			overflow-y: auto;
 		}
 
 			.projectChanges::-webkit-scrollbar {
-				width: 10px; 
+				width: 5px;
 			}
 
 			.projectChanges::-webkit-scrollbar-thumb {
@@ -239,10 +251,6 @@
 			outline: none;
 		}
 
-			#processedData:invalid {
-				border-color: red;
-			}
-
 		#rejectedData {
 			padding: 10px;
 			font-size: 16px;
@@ -251,9 +259,7 @@
 			outline: none;
 		}
 
-			#rejectedData:invalid {
-				border-color: red;
-			}
+
 
 		.file-icons {
 			display: none;
@@ -279,27 +285,73 @@
 		}
 
 		.file-icons a, .file-icons i {
-			margin-left:5px;
-			font-size:20px;
-			color:black;
+			margin-left: 5px;
+			font-size: 20px;
+			color: black;
 			cursor: pointer;
 		}
 
 		.change-info {
-			padding: 20px;
+			padding: 10px;
+			margin-bottom:12px;
 		}
 
 			.change-info:not(:last-child) {
 				border-bottom: 1px solid #ccc;
 			}
 
-			.delete-icon:hover{
-				color:red;
-			}
+		.delete-icon:hover {
+			color: red;
+		}
 
-			.edit-icon:hover{
-				color:blue;
-			}
+		.edit-icon:hover {
+			color: blue;
+		}
+
+		.initials-circle {
+			border: 1px solid gray;
+			padding: 4px 8px;
+			border-radius: 20%;
+			background-color: #7986CB;
+			color: white;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			margin-right: 10px;
+			font-weight: bold;
+			font-size: 15px;
+		}
+
+
+		.bi-download:hover {
+			color: green;
+		}
+
+		.bi-pencil:hover {
+			color: blue;
+		}
+
+		.bi-trash:hover {
+			color: red;
+		}
+
+		.cke_bottom {
+			background-color: #fff;
+			border-top:none;
+			display:none;
+		}
+
+		.cke_top {
+			background-color: #fff;
+		}
+
+		.cke{
+			padding: 0 !important; /* Ensure no padding */
+			margin-top: 10px !important;
+			margin-bottom: 10px !important;
+		}
+
+
 	</style>
 	<title>Tasks</title>
 
@@ -313,6 +365,9 @@
 				<div class="row">
 					<div class="col-9" style="text-align:start;">
 						<h3> @Model.ProjectID</h3>
+
+						<input type="hidden" id="project-id" value="@Model.ProjectID" />
+						<input type="hidden" id="project-name" value="@Model.Project" />
 						<span><strong>Created By </strong><span style="color:blue">@Model.CreatedBy</span><span> on @Model.StartDate.ToString("MM/dd/yyyy")</span></span>
 					</div>
 					<div class="col-3" style="text-align:end;">
@@ -322,23 +377,18 @@
 							<input type="hidden" name="projectId" value="@Model.ProjectID" />
 							@if (Model.Flag == "True")
 							{
-								<a id="editBtn" class="btn"><i class="bi bi-pencil-square"></i></a>
+
+								@if (Context.Session.GetString("UserRole") == "Super Admin" || Context.Session.GetString("UserName") == Model.CreatedBy || Model.Status != "Done")
+								{
+									<a id="editBtn" class="btn"><i class="bi bi-pencil-square"></i></a>
+								}
+
 								<a href="#" id="deleteTaskBtn" class="btn"><i id="delete" class="bi bi-trash"></i></a>
 							}
-							
-						}
-						@if (Context.Session.GetString("UserName") != Model.Assignee )
-						{
-							@if (Context.Session.GetString("UserRole") != "Super Admin")
-							{
-								 <a id="close" href="/Tasks/Tasks"><i class="bi bi-x-square-fill" style="font-size:20px; color:#FC0606"></i> </a> 
-								
-							}
-							
-
 
 						}
-						
+						@* <a id="close" href="/Tasks/Tasks"><i class="bi bi-x-square-fill" style="font-size:20px; color:#FC0606"></i> </a> *@
+
 
 					</div>
 				</div>
@@ -351,7 +401,22 @@
 					<div class="col-9">
 						<input type="hidden" name="ProjectID" value="@Model.ProjectID">
 						<input type="text" id="summaryInput" asp-for="Summary" value="@Model.Summary" class="summary form-control" readonly>
-						<textarea id="descriptionTextArea" asp-for="Description" class="description form-control mt-3" rows="12" readonly>@Model.Description @Model.EndDate</textarea>
+						@* <textarea id="descriptionTextArea" asp-for="Description" class="description form-control mt-3" rows="12" readonly>@Model.Description @Model.EndDate</textarea> *@
+						<textarea id="descriptionTextArea" asp-for="Description">@Model.Description</textarea>
+						@* <div id="richEditor" class="description form-control mt-3" style="height: 300px; display:none;"></div> *@
+
+
+						<div class="mb-3 uploadfiletask">
+							<input type="file" name="file" id="fileInput" class="form-control" style="display: none;" onchange="uploadFile(this)" />
+
+							<label for="fileInput" style="cursor: pointer;">
+								<i class="ri-attachment-2" style="color:blue"></i>
+								Click here to upload files
+							</label>
+						</div>
+
+
+
 						@if (ViewBag.Filepath != null && ViewBag.Filepath.Count > 0)
 						{
 							<div class="mt-3">
@@ -363,15 +428,15 @@
 										var file = System.IO.Path.GetFileName(filePath);
 										var filename = System.IO.Path.GetFileNameWithoutExtension(filePath);
 										var fileExtension = System.IO.Path.GetExtension(filePath).TrimStart('.').ToUpper();
-										<div class="file-info" style="position: relative; display: inline-block;">
+										<div class="file-info" style="position: relative; display: inline-block; background:#D9F8EB;">
 											<div class="file-header" style="font-weight: 500;">@fileExtension</div>
 											<span class="file-name" style="font-weight: normal;">@filename</span>
 											<div class="file-icons">
 												<a href="@Url.Action("DownloadFile", "Tasks", new { filePath = filePath })">
-													<i class="bi bi-download" style="margin-right: 8px;"></i>
+													<i class="bi bi-download" style="margin-right: 8px; cursor: pointer; "></i>
 												</a>
-												<i class="bi bi-pencil" style="margin-right: 8px; cursor: pointer;" onclick="openEditFileModal('@Model.Project','@Model.ProjectID','@file')"></i>
-												<i class="bi bi-trash" style="cursor: pointer;" onclick="deleteFile('@file','@Model.ProjectID','@Model.Project')"></i>
+												<i class="bi bi-pencil" style="margin-right: 8px; cursor: pointer;" onclick="openEditFileModal('@Model.Project','@Model.ProjectID','@file','TaskFile')"></i>
+												<i class="bi bi-trash" style="cursor: pointer; " onclick="deleteFile('@file','@Model.ProjectID','@Model.Project','TaskFile')"></i>
 											</div>
 										</div>
 									}
@@ -381,24 +446,70 @@
 
 
 						<div class="row" id="commentrow" style="padding:10px; display: none; margin-top:20px;">
-							<div class="projectChanges" id="updated_Comments">
+							<div class="projectChanges" id="updated_Comments" style=" margin-bottom:10px;">
 								<span id="projectChanges"></span>
 							</div>
 						</div>
+
 
 
 						@if (Model.Flag == "True")
 						{
 							<div class="row" id="commentsrow" style="padding: 0px; margin-top:20px;">
 								<div class="col-12">
-									<textarea id="comments" class="form-control mb-2" autocomplete="off" placeholder="Add Comments"></textarea>
+									<textarea id="comments" class="form-control mb-2" style="height:auto !important;" autocomplete="off" placeholder="Add Comments"></textarea>
+									<div class="mb-3">
+										<input type="file" name="file" id="commentfileInput" class="form-control" style="display: none;" onchange="uploadFile(this)" />
+
+										<label for="commentfileInput" style="cursor: pointer;">
+											<i class="ri-attachment-2" style="color:blue"></i>
+											Click here to upload files
+										</label>
+									</div>
 									<input type="hidden" id="projectId" name="projectId" value="@Model.ProjectID" />
 									<a id="addcomment" class="btn btn-primary btn-sm">Add Comment</a>
 								</div>
 							</div>
+
+							<script>
+								CKEDITOR.replace('comments', {
+									 
+									contentsCss: 'body { font-size: 15px; }',
+									height: 100
+								});
+
+								CKEDITOR.instances.comments.on('instanceReady', function () {
+									var editorContainer = CKEDITOR.instances.comments.container.$;
+									editorContainer.style.borderRadius = '5px';
+									editorContainer.style.marginBottom = '10px'; // Add margin-bottom
+								});
+
+								document.addEventListener("DOMContentLoaded", function () {
+									var addCommentBtn = document.getElementById("addcomment");
+
+									function toggleAddCommentButton() {
+										var editorData = CKEDITOR.instances.comments.getData();
+										console.log(editorData);
+										if (editorData.trim() !== "") {
+											addCommentBtn.disabled = false;
+											addCommentBtn.classList.remove("disabled");
+										} else {
+											addCommentBtn.disabled = true;
+											addCommentBtn.classList.add("disabled");
+										}
+									}
+
+									// Initially disable the button
+									toggleAddCommentButton();
+
+									// Listen to changes in the CKEditor instance
+									CKEDITOR.instances.comments.on('change', function () {
+										toggleAddCommentButton();
+									});
+								});
+							</script>
 						}
 
-						
 					</div>
 					<div class="col-3">
 						<div style="box-shadow: 0 0 5px rgba(117, 117, 117, 0.5); border-radius:5px; padding:20px;">
@@ -406,7 +517,7 @@
 								<label for="project-dropdown" style="font-weight:500;">Project</label>
 								<select id="project-dropdown" class="form-select mb-2" asp-for="Project" disabled>
 									@* <option value="" selected disabled hidden>Choose Project</option> *@
-									@foreach (var project in new List<string> { "NHA", "Disability", "EPIC" })
+									@foreach (var project in ViewBag.Projects)
 									{
 										if (Model.Project == project)
 										{
@@ -494,7 +605,6 @@
 							</div>
 							<div class="dropdown-container">
 								<label for="endDate">End Date</label>
-								@* <input type="text" id="endDate" class="form-control mb-2" value="@Model.EndDate.ToString("dd-MMM-yyyy")" readonly> *@
 								<div class="input-container">
 									<input type="text" id="endDate" class="form-control mb-2" value="@Model.EndDate.ToString("dd-MMM-yyyy")" readonly>
 									<i class="bi bi-calendar-day icon"></i>
@@ -514,11 +624,11 @@
 						</div>
 					</div>
 				</div>
-				@if (Context.Session.GetString("UserName") == Model.Assignee || Context.Session.GetString("UserRole") == "Super Admin")
+				@if (Context.Session.GetString("UserName") == Model.Assignee || Context.Session.GetString("UserRole") == "Super Admin" || Context.Session.GetString("UserName") == Model.CreatedBy)
 				{
 					<div class="row" style="padding:20px;">
 						<div class="col-6" id="saveCancelButtons" style="display: none;">
-							<button id="saveChanges" type="submit" class="btn btn-primary btn-sm">Save</button>
+							<button id="saveChanges" class="btn btn-primary btn-sm">Save</button>
 							<a id="cancelbtn" class="btn btn-outline btn-sm"><strong>Cancel</strong></a>
 						</div>
 						<div class="col-3" style="text-align:end;">
@@ -526,7 +636,7 @@
 						<div class="col-3"></div>
 					</div>
 				}
-
+			</div>
 		</form>
 
 
@@ -544,17 +654,15 @@
 			</script>
 		}
 
-		@if (TempData["Status"] != null)
-		{
+		
+		
 
 			<form id="myForm">
-				<div id="myModal" class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+			<div id="myModal" class="modal-dialog modal-dialog-centered modal-dialog-scrollable"  >
 					<div class="modal-content">
 						<div class="modal-header" style="border-bottom:1px solid gray; display: flex; justify-content: space-between;">
 							<h3>Data count for @TempData["ProjectID"]</h3>
-							@* <button type="button" class="btn close" data-dismiss="modal" style="margin-top:-20px; margin-right:-20px;">
-								<i class="bi bi-x-square-fill" style="font-size:24px; color:#FC0606"></i>
-							</button> *@
+
 						</div>
 						<div class="modal-body">
 							<div class="row mt-2">
@@ -586,21 +694,18 @@
 							</div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-primary" id="submitBtn">OK</button>
+						<button type="button" class="btn btn-primary" id="submitBtn" style="margin-right:15px">OK</button>
+							<button type="button" class="btn btn-danger" id="closebtn" >Close</button>
 						</div>
 					</div>
 				</div>
 
 			</form>
 
-
-
-
-		}
+		
 
 	</div>
-	</div>
-
+	 
 
 	<!-- Modal -->
 	<div class="modal fade" id="editFileModal" tabindex="-1" aria-labelledby="editFileModalLabel" aria-hidden="true">
@@ -609,9 +714,6 @@
 				<form id="editFileForm" method="post">
 					<div class="modal-header">
 						<h5 class="modal-title" id="editFileModalLabel">Edit File</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
-						</button>
 					</div>
 					<div class="modal-body">
 						<div class="form-group">
@@ -621,17 +723,146 @@
 						<input type="hidden" id="originalFilenameInput" name="originalFilename" value="">
 						<input type="hidden" id="projectIdInput" name="projectId" value="">
 						<input type="hidden" id="projectInput" name="project" value="">
+						<input type="hidden" id="fileTypeInput" name="fileType" value="TaskFile">
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="button" id="cancelBtn" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						<button type="submit" class="btn btn-primary">Save</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+	<script>
+		function openEditFileModal(project, projectId, file, fileType) {
+			// Set the values in the modal
+			var filenameWithoutExtension = file.replace(/\.[^/.]+$/, "");
+			document.getElementById('filenameInput').value = filenameWithoutExtension;
+			document.getElementById('originalFilenameInput').value = file;
+			document.getElementById('projectIdInput').value = projectId;
+			document.getElementById('projectInput').value = project;
+			document.getElementById('fileTypeInput').value = fileType;
+
+			document.getElementById("cancelBtn").addEventListener("click", function () {
+
+				$('#editFileModal').modal('hide');
+			});
+			// Set the form action URL
+			document.getElementById('editFileForm').action = `/Tasks/EditUploadFile`;
+
+			// Open the modal
+			$('#editFileModal').modal('show');
+		}
+	</script>
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+			var textareaContent = document.getElementById('descriptionTextArea').value;
+			var decodedContent = decodeHtml(textareaContent);
+			CKEDITOR.replace('descriptionTextArea', {
+				readOnly: true,
+				height: '300px',
+				 
+				contentsCss: ['https://fonts.googleapis.com/css2?family=Solway:wght@400;700&display=swap',   
+					'body { font-size: 20px; }']
+			}).setData(decodedContent);
+			CKEDITOR.instances.descriptionTextArea.on('instanceReady', function () {
+				var editorContainer = CKEDITOR.instances.descriptionTextArea.container.$;
+				editorContainer.style.borderRadius = '5px';
+				editorContainer.style.marginTop = '10px';
+			});
+		});
+
+		function decodeHtml(html) {
+			var txt = document.createElement("textarea");
+			txt.innerHTML = html;
+			return txt.value;
+		}
+	</script>
+
+	<script>
+		document.getElementById("fileInput").addEventListener("change", function () {
+			var fileInput = this;
+			var file = fileInput.files[0]; // Get the selected file
+
+			// Get projectID and project values from your HTML or wherever they are stored
+			var projectID = document.getElementById("project-id").value;
+			console.log(projectID);
+			var project = document.getElementById("project-name").value;
+			console.log(project);
+
+			// Create a FormData object
+			var formData = new FormData();
+			formData.append('file', file);
+			formData.append('projectID', projectID); // Append projectID
+			formData.append('project', project); // Append project
+			// Append the file to FormData object
 
 
+			// Send the AJAX request
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/Tasks/Uploadtaskfile"); // Assuming "Tasks" is the controller and "Upload" is the action
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+					var response = JSON.parse(xhr.responseText);
+					if (response.filePath) {
+						console.log(response.message);
+
+						console.log("File uploaded successfully. File path:", response.filePath);
+						window.location.reload();
+					} else {
+						console.error("File upload failed.");
+					}
+				} else {
+					console.error("File upload failed with status:", xhr.status);
+				}
+				// Reset the file input
+				fileInput.value = '';
+			};
+			xhr.send(formData);
+		});
+		document.getElementById("commentfileInput").addEventListener("change", function () {
+			var fileInput = this;
+			var file = fileInput.files[0]; // Get the selected file
+
+			// Get projectID and project values from your HTML or wherever they are stored
+			var projectID = document.getElementById("project-id").value;
+			console.log(projectID);
+			var project = document.getElementById("project-name").value;
+			console.log(project);
+
+			// Create a FormData object
+			var formData = new FormData();
+			formData.append('file', file);
+			formData.append('projectID', projectID); // Append projectID
+			formData.append('project', project); // Append project
+			// Append the file to FormData object
+
+
+			// Send the AJAX request
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/Tasks/Uploadcommentfile"); // Assuming "Tasks" is the controller and "Upload" is the action
+			xhr.onload = function () {
+				if (xhr.status === 200) {
+					var response = JSON.parse(xhr.responseText);
+					if (response.filePath) {
+						console.log(response.message);
+
+						console.log("File uploaded successfully. File path:", response.filePath);
+						window.location.reload();
+					} else {
+						console.error("File upload failed.");
+					}
+				} else {
+					console.error("File upload failed with status:", xhr.status);
+				}
+				// Reset the file input
+				fileInput.value = '';
+			};
+			xhr.send(formData);
+		});
+
+
+	</script>
 
 
 	<div id="deleteConfirmationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
@@ -644,51 +875,59 @@
 					Are you sure you want to delete this task?
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-					<button id="confirmDeleteBtn" type="button" class="btn btn-danger">Delete</button>
+					<a href="@Model.ProjectID" id="cancelBtn" class="btn btn-secondary">Cancel</a>
+					<a href="#"id="confirmDeleteBtn" class="btn btn-danger">Delete</a>
 				</div>
 			</div>
 		</div>
 	</div>
 
+	<!-- Include jQuery and Bootstrap JS -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
 	<script>
-		function openEditFileModal(project, projectId, file) {
-			// Set the values in the modal
-			document.getElementById('filenameInput').value = file;
-			document.getElementById('originalFilenameInput').value = file;
-			document.getElementById('projectIdInput').value = projectId;
-			document.getElementById('projectInput').value = project;
+		document.addEventListener('DOMContentLoaded', function () {
+			// Show the modal when delete button is clicked
+			document.getElementById("deleteTaskBtn").addEventListener("click", function (event) {
+				event.preventDefault();
+				$('#deleteConfirmationModal').modal('show');
+			});
 
-			// Set the form action URL
-			document.getElementById('editFileForm').action = `/Tasks/EditUploadFile`;
+			// Attach event listener to handle the modal hide and log to console
+			$('#deleteConfirmationModal').on('hidden.bs.modal', function () {
+				console.log('Modal has been hidden');
+				// You can uncomment the next line to redirect to the previous page after confirming the modal hides correctly
+				// history.back();  // Redirect to the previous page
+			});
 
-			// Open the modal
-			$('#editFileModal').modal('show');
-		}
+			// Hide the modal when cancel button is clicked
+			document.getElementById("cancelBtn").addEventListener("click", function (event) {
+				event.preventDefault();
+				$('#deleteConfirmationModal').modal('hide');
+			});
+
+			// Redirect to delete URL when confirm delete button is clicked
+			document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
+				var deleteUrl = '@Url.Action("Delete", "Tasks", new { id = Model.ProjectID })';
+				window.location.href = deleteUrl;
+			});
+		});
 	</script>
 
-	
-	<script>
-		document.getElementById("deleteTaskBtn").addEventListener("click", function (event) {
-			event.preventDefault(); // Prevent default link behavior
-			$('#deleteConfirmationModal').modal('show');
-		});
-
-		document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
-
-			var deleteUrl = '@Url.Action("Delete", "Tasks", new { id = Model.ProjectID })';
-			
-			window.location.href = deleteUrl;
-		});
-	</script>
 
 
+
+
+
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 	<script>
-		
+
 		$(document).ready(function () {
 			// Check if there are comments present
 			if ($("#projectChanges").text().trim().length > 0) {
@@ -699,7 +938,7 @@
 
 
 	<script>
-		function deleteFile(filename, projectID, project) {
+		function deleteFile(filename, projectID, project, fileType) {
 			// Encode the filename to make it URL-safe
 			var decodedFilename = decodeURIComponent(filename);
 			var url = `/Tasks/DeleteUploadedFile`;
@@ -710,7 +949,8 @@
 				data: {
 					filename: decodedFilename,
 					projectID: projectID,
-					project: project
+					project: project,
+					fileType: fileType
 				},
 				success: function (response) {
 					// Handle success response
@@ -725,6 +965,7 @@
 				}
 			});
 		}
+
 	</script>
 
 
@@ -761,16 +1002,17 @@
 	</script>
 
 	@* Add Comment Code *@
-	
+
 	<script>
 		document.getElementById('addcomment').addEventListener('click', function () {
-			var comment = document.getElementById('comments').value;
+			var comment = CKEDITOR.instances.comments.getData(); // Get the data from CKEditor instance
+			console.log(comment);
 			var projectId = document.getElementById('projectId').value;
 			var data = {
 				Comment: comment,
 				ProjectId: projectId
-
 			};
+
 			var xhr = new XMLHttpRequest();
 			xhr.open('POST', '/Tasks/InsertData', true);
 			xhr.setRequestHeader('Content-Type', 'application/json');
@@ -801,6 +1043,12 @@
 				data.forEach(function (item) {
 					var changeInfo = $("<div>").addClass("change-info"); // Add a class for styling
 
+					var initials = getInitials(item.userName);
+
+					// Create a circle with initials
+					var userInitials = $("<span>").addClass("initials-circle").text(initials).css({ "color": "#fff" });
+					changeInfo.append(userInitials);
+
 					var userName = $("<b>").text(item.userName);
 					changeInfo.append(userName);
 
@@ -821,14 +1069,14 @@
 						var editicon = $("<i>").addClass("bi bi-pencil edit-icon").css({ "cursor": "pointer", "margin-left": "20px" }).click(function () {
 							var id = item.commentId;
 							var commentTextSpan = $("#commentText_" + id);
-							var originalText = commentTextSpan.text();
+							var originalText = commentTextSpan.html();
 
 							// Create a textarea with the current comment text
 							var textarea = $("<textarea>").addClass("form-control").val(originalText);
 
 							// Create a save button
 							var saveButton = $("<a>").addClass("btn btn-primary btn-sm mt-2").text("Save").click(function () {
-								var editedText = textarea.val();
+								var editedText = CKEDITOR.instances["editor_" + id].getData();
 
 								$.ajax({
 									url: "/Tasks/EditComment",
@@ -839,12 +1087,14 @@
 									},
 									success: function (response) {
 										console.log("Comment edited successfully");
-										
-										commentTextSpan.text(editedText);
+
+										commentTextSpan.html(editedText);
 										// Remove the textarea and save button
 										textarea.remove();
 										saveButton.remove();
 										cancelButton.remove();
+										// Destroy the CKEditor instance
+										CKEDITOR.instances["editor_" + id].destroy();
 										// Show the edit icon again
 										editicon.show();
 										location.reload();
@@ -854,23 +1104,37 @@
 									}
 								});
 							});
-							var cancelButton = $("<a>").addClass("btn btn-secondary btn-sm mt-2 ml-2").text("Cancel").css({"margin-right":"10px"}).click(function () {
+
+							var cancelButton = $("<a>").addClass("btn btn-secondary btn-sm mt-2 ml-2").text("Cancel").css({ "margin-right": "10px" }).click(function () {
 								// Replace the textarea with the original comment text span
 								textarea.replaceWith(commentTextSpan);
 								// Remove the save and cancel buttons
 								saveButton.remove();
 								cancelButton.remove();
+								// Destroy the CKEditor instance
+								CKEDITOR.instances["editor_" + id].destroy();
 								// Show the edit icon again
 								editicon.show();
 							});
+
 							// Replace the comment text span with the textarea
 							commentTextSpan.replaceWith(textarea);
 							// Hide the edit icon
 							editicon.hide();
 							// Append the save button after the textarea
 							textarea.after(saveButton).after(cancelButton);
+
+							// Initialize CKEditor
+							textarea.attr("id", "editor_" + id);
+							CKEDITOR.replace("editor_" + id, {
+								height: 60,
+								 
+								contentsCss: 'body { font-size: 13px; }'
+							});
 						}).hide();
 						changeInfo.append(editicon);
+						
+
 					}
 					if ("commentText" in item && (item.userName === username || userrole === "Super Admin")) {
 						var deleteIcon = $("<i>").addClass("bi bi-trash delete-icon").css({ "cursor": "pointer", "margin-left": "20px" }).click(function () {
@@ -902,12 +1166,21 @@
 					}
 
 					changeInfo.hover(function () {
-						$(this).css("background-color", "#f0f0f0");
+						//$(this).css("box-shadow", "0 4px 8px rgba(0, 0, 0, 0.2)");
+						$(this).css({
+							"box-shadow": "0 4px 8px rgba(0, 0, 0, 0.2)",
+							"transform": "translateY(-10px)" // Move the section up by 5px
+						});
 						$(this).find(".delete-icon").show();
 						$(this).find(".edit-icon").show();
 					}, function () {
 						// Hide delete icon when not hovered
-						$(this).css("background-color", "transparent");
+						//$(this).css("box-shadow", "none");
+						$(this).css({
+							"box-shadow": "none",
+							"transform": "translateY(0)" // Return the section to its original position
+						});
+						//$(this).css("bockground-color", "transparant");
 						$(this).find(".delete-icon").hide();
 						$(this).find(".edit-icon").hide();
 					});
@@ -915,11 +1188,56 @@
 					changeInfo.append("<br>");
 
 					if ("field" in item && "oldValue" in item && "newValue" in item) {
-						var fieldChange = $("<span>").text(item.field + ": " + item.oldValue + " -> " + item.newValue);
-						changeInfo.append(fieldChange);
+						if (item.newValue == "Done") {
+							var fieldChange = $("<span>")
+								.text(item.field + ": " + item.oldValue + " -> " + item.newValue)
+								.css({ "margin-left": "45px", "display": "block", "border-bottom": "1px solid #fff", "padding-bottom": "8px" });
+
+							var projectid = document.getElementById('projectId').value;
+							console.log(projectid)
+							changeInfo.append(fieldChange);
+							$.ajax({
+								url: '@Url.Action("GetProjectDataCounts", "Tasks")', // Replace 'YourController' with your controller name
+								type: 'GET',
+								data: {
+									projectID: projectid // Replace 'yourProjectID' with the actual project ID value
+								},
+								success: function (response) {
+									// Populate table rows with data from the response
+									response.forEach(function (data) {
+										var stateNameSpan = $("<span>")
+											.html("<strong>State:</strong> " + data.stateName)
+											.css({ "margin-left": "45px", "display": "block", "margin-top": "10px" });
+										var processedCountSpan = $("<span>")
+											.html("<strong>Processed Data:</strong> " + data.processedCount)
+											.css({ "margin-left": "45px", "display": "block" });
+										var rejectedCountSpan = $("<span>")
+											.html("<strong>Rejected Data:</strong> " + data.rejectedCount)
+											.css({ "margin-left": "45px", "display": "block" });
+										changeInfo.append(stateNameSpan);
+										changeInfo.append(processedCountSpan);
+										changeInfo.append(rejectedCountSpan);
+									});
+
+
+								},
+								error: function (xhr, status, error) {
+									console.error("Error fetching data from the database:", error);
+								}
+							});
+
+
+
+						}
+						else {
+							var fieldChange = $("<span>").text(item.field + ": " + item.oldValue + " -> " + item.newValue).css({ "margin-left": "45px" });
+							changeInfo.append(fieldChange);
+						}
+
 					} else if ("commentText" in item) {
-						var commentText = $("<span>").attr("id", "commentText_" + item.commentId).text(item.commentText);
+						var commentText = $("<div>").attr("id", "commentText_" + item.commentId).html('<div style="margin-left: 45px;">' + item.commentText + '</div>').addClass("comments");
 						changeInfo.append(commentText);
+						 
 					}
 
 					$("#projectChanges").append(changeInfo);
@@ -931,6 +1249,13 @@
 			}
 		});
 
+		function getInitials(name) {
+			var initials = name.split(" ").map(function (word) {
+				return word.charAt(0).toUpperCase();
+			}).join("");
+			return initials;
+		}
+
 		function formatDate(date) {
 			var d = new Date(date);
 			var day = d.getDate().toString().padStart(2, '0');
@@ -941,136 +1266,14 @@
 
 
 
-		// $.ajax({
-		// 	url: "/Tasks/ProjectChanges?projectId=@Model.ProjectID",
-		// 	type: "GET",
-		// 	dataType: "json",
-		// 	success: function (data) {
-		// 		$("#projectChanges").empty();
 
-		// 		data.forEach(function (item) {
-		// 			var changeInfo = $("<div>").addClass("change-info"); // Add a class for styling
-
-		// 			var userName = $("<b>").text(item.userName);
-		// 			changeInfo.append(userName);
-
-		// 			if ("commentText" in item) {
-		// 				changeInfo.append(" Commented on ");
-		// 				changeInfo.append(item.commentId);
-		// 			} else {
-		// 				changeInfo.append(" Updated on ");
-		// 				changeInfo.append(item.changeID);
-		// 			}
-
-		// 			var time = $("<span>").text(formatDate(item.time)).css({ "color": "gray", "font-size": "small" }).addClass("time");
-		// 			changeInfo.append(time);
-
-		// 			var username = "@Context.Session.GetString("UserName")";
-		// 			var userrole = "@Context.Session.GetString("UserRole")";
-		// 			console.log(username);
-		// 			console.log(userrole);
-		// 			if ("commentText" in item && (item.userName === username || userrole == "Super Admin")) {
-		// 				var editicon = $("<i>").addClass("bi bi-pencil edit-icon").css({ "cursor": "pointer", "margin-left": "20px" }).click(function () {
-
-		// 					var id = item.commentId;
-		// 					$.ajax({
-		// 						url: "/Tasks/EditComment",
-		// 						type: "POST",
-		// 						data: {
-		// 							id: id
-		// 						},
-		// 						success: function (response) {
-		// 							console.log("Comment edited successfully");
-		// 							// Reload the page
-		// 							location.reload();
-		// 						},
-		// 						error: function (xhr, status, error) {
-		// 							console.error(error);
-		// 						}
-		// 					});
-
-
-
-		// 				}).hide();
-		// 				changeInfo.append(editicon);
-		// 			}
-		// 			if ("commentText" in item && (item.userName === username || userrole == "Super Admin")) {
-		// 				var deleteIcon = $("<i>").addClass("bi bi-trash delete-icon").css({ "cursor": "pointer", "margin-left": "20px" }).click(function () {
-
-
-		// 					var comment = item.commentText;
-		// 					var time = item.time;
-		// 					var id = item.commentId;
-
-		// 					$.ajax({
-		// 						url: "/Tasks/Deletecomment",
-		// 						type: "POST",
-		// 						data: {
-		// 							comment: comment,
-		// 							projectId: '@Model.ProjectID',
-		// 							time: time,
-		// 							id: id
-		// 						},
-		// 						success: function (response) {
-		// 							console.log("Comment deleted successfully");
-		// 							// Reload the page
-		// 							location.reload();
-		// 						},
-		// 						error: function (xhr, status, error) {
-		// 							console.error(error);
-		// 						}
-		// 					});
-
-		// 				}).hide(); // Initially hide delete icon
-		// 				changeInfo.append(deleteIcon);
-		// 			}
-
-
-		// 			changeInfo.hover(function () {
-		// 				$(this).css("background-color", "#f0f0f0");
-		// 				$(this).find(".delete-icon").show();
-		// 				$(this).find(".edit-icon").show();
-		// 			}, function () {
-		// 				// Hide delete icon when not hovered
-		// 				$(this).css("background-color", "transparent");
-		// 				$(this).find(".delete-icon").hide();
-		// 				$(this).find(".edit-icon").hide();
-		// 			});
-
-		// 			changeInfo.append("<br>");
-
-		// 			if ("field" in item && "oldValue" in item && "newValue" in item) {
-		// 				var fieldChange = $("<span>").text(item.field + ": " + item.oldValue + " -> " + item.newValue);
-		// 				changeInfo.append(fieldChange);
-		// 			} else if ("commentText" in item) {
-		// 				var commentText = $("<span>").text(item.commentText);
-		// 				changeInfo.append(commentText);
-		// 			}
-
-		// 			$("#projectChanges").append(changeInfo);
-		// 		});
-
-
-		// 	},
-		// 	error: function (xhr, status, error) {
-		// 		console.error(error);
-		// 	}
-		// });
-
-		// function formatDate(date) {
-		// 	var d = new Date(date);
-		// 	var day = d.getDate().toString().padStart(2, '0');
-		// 	var month = (d.getMonth() + 1).toString().padStart(2, '0');
-		// 	var year = d.getFullYear();
-		// 	return day + '-' + month + '-' + year;
-		// }
 
 	</script>
 
 	@* Dropdown for modal *@
 
 	<script>
-		
+
 		var states = [
 			"N/A",
 			"Andaman and Nicobar Islands",
@@ -1136,70 +1339,160 @@
 
 	@* Data Count Upadtion in DB *@
 
+
+
 	<script>
-		$(document).ready(function () {
-			$("#submitBtn").click(function (event) {
-				event.preventDefault(); 
+				document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOMContentLoaded event fired');
 
-				$(".error-message").remove();
+    var saveChangesButton = document.getElementById('saveChanges');
+    var submitButton = document.getElementById('submitBtn');
+    var closeModalButton = document.getElementById('closebtn');
+    var taskForm = document.getElementById('taskForm');
+    var modal = document.getElementById('myModal');
+    var processedDataInput = document.getElementById('processedData');
+    var rejectedDataInput = document.getElementById('rejectedData');
+    var stateDropdown = document.getElementById('state-dropdown');
 
-				var processedData = $("#processedData").val();
-				var rejectedData = $("#rejectedData").val();
-				var project = "@TempData["Project"]";
-				var projectID = "@TempData["ProjectID"]";
-				var assignee = "@TempData["Assignee"]";
-				var selectedState = $("#state-dropdown").val();
+    console.log('saveChangesButton:', saveChangesButton);
+    console.log('submitButton:', submitButton);
+    console.log('closeModalButton:', closeModalButton);
 
-				var isValid = true;
+    if (!saveChangesButton) {
+        console.error('Save Changes button not found!');
+        return;
+    }
 
-				if (processedData.trim() === "") {
-					$("#processedData").after('<p class="error-message" style="color: red;">Enter processed data count</p>');
-					isValid = false;
-				}
-				if (rejectedData.trim() === "") {
-					$("#rejectedData").after('<p class="error-message" style="color: red;">Enter rejected data count</p>');
-					isValid = false;
-				}
+    if (!submitButton) {
+        console.error('Submit button not found!');
+        return;
+    }
 
-				if (!isValid) {
-					return false;
-				}
+    if (!closeModalButton) {
+        console.error('Close button not found!');
+        return;
+    }
 
-				$.ajax({
-					url: "/Tasks/InsertFormData",
-					type: "POST",
-					dataType: "json",
-					data: {
-						processedData: processedData,
-						rejectedData: rejectedData,
-						project: project,
-						projectID: projectID,
-						assignee: assignee,
-						state: selectedState
-					},
-					success: function (response) {
-						if (response.success) {
-							alert("Data inserted successfully!");
-							$('#myForm')[0].reset();
-							window.location.href = "/Tasks/Tasks";
-							$('#myModal').find('.close').click(); 
-						} else {
-							alert("Failed to insert data into the database.");
-						}
-					},
-					error: function (xhr, status, error) {
-						alert("An error occurred while processing your request.");
-					}
-				});
-			});
-		});
+    // Close button handler for the modal
+    closeModalButton.addEventListener('click', function() {
+        console.log('Close button clicked');
+        modal.classList.remove('show');
+        modal.style.display = 'none';
+    });
+
+    // Save Changes button handler for the task form
+    saveChangesButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('saveChanges button clicked');
+        var projectType = document.getElementById('type-dropdown').value;
+        var status = document.getElementById('status-dropdown').value;
+
+        if (projectType === 'Data Processing' && status === 'Done') {
+            modal.classList.add('show');
+            modal.style.display = 'block';
+        } else {
+            taskForm.submit();
+        }
+    });
+
+    // Submit button handler for the data count form
+    submitButton.addEventListener('click', function(event) {
+        event.preventDefault();
+        console.log('Submit button clicked');
+
+        // Remove previous error messages
+        var errorMessages = document.querySelectorAll('.error-message');
+        errorMessages.forEach(function(msg) {
+            msg.remove();
+        });
+
+        var processedData = processedDataInput.value.trim();
+        var rejectedData = rejectedDataInput.value.trim();
+        var project = '@Model.Project'; // Ensure this is correct
+        var projectID = '@Model.ProjectID'; // Ensure this is correct
+        var assignee = '@Model.Assignee'; // Ensure this is correct
+        var selectedState = stateDropdown.value;
+
+        var isValid = true;
+
+        // Validate processedData
+        if (!/^\d+$/.test(processedData)) {
+            var errorMessage = document.createElement('p');
+            errorMessage.className = 'error-message';
+            errorMessage.style.color = 'red';
+            errorMessage.textContent = 'Enter a valid numeric value';
+            processedDataInput.parentNode.appendChild(errorMessage);
+            isValid = false;
+        }
+
+        // Validate rejectedData
+        if (!/^\d+$/.test(rejectedData)) {
+            var errorMessage = document.createElement('p');
+            errorMessage.className = 'error-message';
+            errorMessage.style.color = 'red';
+            errorMessage.textContent = 'Enter a valid numeric value';
+            rejectedDataInput.parentNode.appendChild(errorMessage);
+            isValid = false;
+        }
+
+        // Validate state selection
+        if (!selectedState || selectedState.trim() === '') {
+            var errorMessage = document.createElement('p');
+            errorMessage.className = 'error-message';
+            errorMessage.style.color = 'red';
+            errorMessage.textContent = 'Please select a state';
+            stateDropdown.parentNode.appendChild(errorMessage);
+            isValid = false;
+        }
+
+        // If validation fails, return false
+        if (!isValid) {
+            console.log('Validation failed');
+            return false;
+        }
+
+        // If validation passes, make the AJAX request to submit the data count form
+        $.ajax({
+            url: "/Tasks/InsertFormData",
+            type: "POST",
+            dataType: "json",
+            data: {
+                processedData: processedData,
+                rejectedData: rejectedData,
+                project: project,
+                projectID: projectID,
+                assignee: assignee,
+                state: selectedState
+            },
+            success: function (response) {
+                if (response.success) {
+                    alert("Data inserted successfully!");
+                    $('#myForm')[0].reset();
+                    $("#myModal").modal('hide');
+                    // Submit the task form after successful submission of the modal form
+                    $("#taskForm").submit();
+                } else {
+                    alert("Failed to insert data into the database.");
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred while processing your request.");
+            }
+        });
+    });
+});
+
+
+
+
 	</script>
 
-    @*Modal for Data Count *@
 
-	<script>
+	@*Modal for Data Count *@
+
+	@* <script>
 		var modal = document.getElementById("myModal");
-		var closeButton = document.querySelector(".modal-header button.close");
+		var closeButton = document.querySelector("#closebtn");
 
 		window.onload = function () {
 			modal.style.display = "block";
@@ -1214,28 +1507,64 @@
 				modal.style.display = "block";
 			}
 		};
-	</script>
+	</script> *@
 
 	@*Edit Button functionality*@
+	@* <script>
+	$(document).ready(function () {
+	$("#editBtn").click(function () {
+	$("#summaryInput").prop("readonly", function (i, v) {
+	return !v;
+	});
+	$("#descriptionTextArea").prop("readonly", function (i, v) {
+	return !v;
+	});
+	// $(".form-select").prop("disabled", function (i, v) {
+	// 	return !v;
+	// });
+	$("#assignee-dropdown").prop("disabled", function (i, v) {
+	return !v;
+	});
+	$("#status-dropdown").prop("disabled", function (i, v) {
+	return !v;
+	});
+	$("#priority-dropdown").prop("disabled", function (i, v) {
+	return !v;
+	});
+	$("#estimateddays").prop("disabled", function (i, v) {
+	return !v;
+	});
+	$("#saveCancelButtons").show();
+	$(this).hide();
+	$("#commentsrow").hide();
+	$("#commentrow").hide();
+	});
+
+	$("#cancelbtn").click(function () {
+	$("#summaryInput").prop("readonly", true);
+	$("#descriptionTextArea").prop("readonly", true);
+	$(".form-select").prop("disabled", true);
+	// $("#assignee-select").prop("disabled", true);
+	// $("#status-select").prop("disabled", true);
+	// $("#priority-select").prop("disabled", true);
+	$("#estimateddays").prop("disabled", true);
+	$("#editBtn").show();
+	$("#saveCancelButtons").hide();
+	$("#commentsrow").show();
+	$("#commentrow").show();
+	});
+	});
+	</script>  *@
 	<script>
 		$(document).ready(function () {
-			$("#editBtn").click(function () {
+			/*$("#editBtn").click(function () {
+				// Make CKEditor editable
+				CKEDITOR.instances.descriptionTextArea.setReadOnly(false);
+				// Other input fields handling
 				$("#summaryInput").prop("readonly", function (i, v) {
 					return !v;
 				});
-				$("#descriptionTextArea").prop("readonly", function (i, v) {
-					return !v;
-				});
-				// $(".form-select").prop("disabled", function (i, v) {
-				// 	return !v;
-				// });
-				$("#assignee-dropdown").prop("disabled", function (i, v) {
-					return !v;
-				});
-				$("#status-dropdown").prop("disabled", function (i, v) {
-					return !v;
-				});
-				$("#priority-dropdown").prop("disabled", function (i, v) {
+				$("#assignee-dropdown, #status-dropdown, #priority-dropdown").prop("disabled", function (i, v) {
 					return !v;
 				});
 				$("#estimateddays").prop("disabled", function (i, v) {
@@ -1243,25 +1572,67 @@
 				});
 				$("#saveCancelButtons").show();
 				$(this).hide();
-				$("#commentsrow").hide();
-				$("#commentrow").hide();
+				$("#commentsrow, #commentrow").hide();
+			});*/
+			let assigneeChanged = false;
+			let statusChanged = false;
+
+			function checkEnablePriority() {
+				if (assigneeChanged && statusChanged) {
+					$("#priority-dropdown").prop("disabled", false);
+				}
+			}
+			$('.uploadfiletask').hide();
+			$("#editBtn").click(function () {
+				// Make CKEditor editable
+				CKEDITOR.instances.descriptionTextArea.setReadOnly(false);
+				$('.uploadfiletask').show();
+
+				// Other input fields handling
+				$("#summaryInput").prop("readonly", function (i, v) {
+					return !v;
+				});
+				$("#assignee-dropdown, #status-dropdown, #estimateddays").prop("disabled", function (i, v) {
+					return !v;
+				});
+
+				$("#saveCancelButtons").show();
+				$(this).hide();
+				$("#commentsrow, #commentrow").hide();
+
+			});
+
+			$("#assignee-dropdown").change(function () {
+				assigneeChanged = true;
+				checkEnablePriority();
+			});
+
+			$("#status-dropdown").change(function () {
+				statusChanged = true;
+				checkEnablePriority();
 			});
 
 			$("#cancelbtn").click(function () {
+				// Make CKEditor non-editable
+				CKEDITOR.instances.descriptionTextArea.setReadOnly(true);
+				// Other input fields handling
+				$('.uploadfiletask').hide();
 				$("#summaryInput").prop("readonly", true);
-				$("#descriptionTextArea").prop("readonly", true);
 				$(".form-select").prop("disabled", true);
-			    // $("#assignee-select").prop("disabled", true);
-			    // $("#status-select").prop("disabled", true);
-			    // $("#priority-select").prop("disabled", true);
 				$("#estimateddays").prop("disabled", true);
 				$("#editBtn").show();
 				$("#saveCancelButtons").hide();
-				$("#commentsrow").show();
-				$("#commentrow").show();
+				$("#commentsrow, #commentrow").show();
+			});
+
+			// Initialize CKEditor
+			CKEDITOR.replace('descriptionTextArea', {
+				readOnly: true
 			});
 		});
 	</script>
+
+
 
 
 </body>

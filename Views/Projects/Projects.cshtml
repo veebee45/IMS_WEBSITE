@@ -1,0 +1,138 @@
+﻿@using System.Data
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" href="/css/Users.css">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<title>Tasks</title>
+
+
+
+</head>
+<body>
+	<div class="card" style="margin-top:10px;">
+		<div class="card-head" style="border-bottom:1px solid gray;">
+			<div class="row">
+				<div class="col-3">
+					<label style="position:relative; font-size:24px; margin-left:20px;font-weight: bold;"><i class="ri-square-fill" style="border:1px solid black; margin-right:7px; font-size:20px;"></i>Project List</label>
+				</div>
+				<div class="col-9" style="text-align:end;">
+					<a href="/Projects/AddProject" class="newuser"><i class="bi bi-plus"></i>   New Project</a>
+				</div>
+			</div>
+		</div>
+		<div class="card-body">
+
+			@functions {
+				// Helper method to truncate a string to a specified length with ellipsis
+				public string TruncateDescription(string description, int maxLength)
+				{
+					if (string.IsNullOrEmpty(description))
+					{
+						return description;
+					}
+
+					return description.Length <= maxLength ? description : description.Substring(0, maxLength) + "...";
+				}
+			}
+
+			<table class="table table-hover">
+				<thead class="table-head-hover">
+					<tr>
+						<th onclick="sortTable(0)">Project Id</th>
+						<th onclick="sortTable(1)">Project Name</th>
+						<th onclick="sortTable(1)">Project Description</th>
+						<th onclick="sortTable(1)">Project Assignee</th>
+						<th onclick="sortTable(2)">Created On</th>
+						<th onclick="sortTable(3)">Created By</th>
+						<th onclick="sortTable(4)">Action</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (DataRow row in Model.Rows)
+					{
+						<tr>
+							<td>
+								<span>@row["projectid"].ToString().Substring(0, 1)</span>
+								<a href="@Url.Action("ViewProject", "Projects", new { projectId = row["projectid"] })">
+									@row["projectid"]
+								</a>
+							</td>
+							<td>@row["ProjectName"]</td>
+							<td>@TruncateDescription(row["ProjectDesc"].ToString(), 30)</td>
+							<td>@TruncateDescription(row["AssigneeNames"].ToString(), 20)</td>
+							<td>@row["createdon"]</td>
+							<td>@row["createdby"]</td>
+							<td>
+								<form method="post" action="@Url.Action("DeleteProject", "Projects")">
+									<input type="hidden" name="projectId" value="@row["projectid"]" />
+									<a href="@Url.Action("EditProject", "Projects", new { projectId = row["projectid"] })" style="color:white" class="btn btn-sm btn-primary">Edit</a>&nbsp;&nbsp;&nbsp;
+									<button type="submit" class="btn btn-sm btn-outline-primary" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+			<ul class="pagination justify-content-end">
+				@for (int i = 1; i <= ViewBag.PageCount; i++)
+				{
+					<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+						<a class="page-link" href="@Url.Action("Projects", "Projects", new { page = i, pageSize = 10 })">@i</a>
+					</li>
+				}
+			</ul>
+		</div>
+	</div>
+
+	<script>
+		function sortTable(columnIndex) {
+			var table, rows, switching, i, x, y, shouldSwitch, dir, switchCount = 0;
+			table = document.querySelector('.table');
+			switching = true;
+			dir = "asc";
+			while (switching) {
+				switching = false;
+				rows = table.rows;
+				for (i = 1; i < (rows.length - 1); i++) {
+					shouldSwitch = false;
+					x = rows[i].getElementsByTagName("TD")[columnIndex];
+					y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+					if (dir == "asc") {
+						if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+							shouldSwitch = true;
+							break;
+						}
+					} else if (dir == "desc") {
+						if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+							shouldSwitch = true;
+							break;
+						}
+					}
+				}
+				if (shouldSwitch) {
+					rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+					switching = true;
+					switchCount++;
+				} else {
+					if (switchCount == 0 && dir == "asc") {
+						dir = "desc";
+						switching = true;
+					}
+				}
+			}
+		}
+	</script>
+
+
+</body>
+
+</html>

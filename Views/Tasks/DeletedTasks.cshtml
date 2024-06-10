@@ -140,14 +140,14 @@
 			<table class="table table-hover">
 				<thead class="table-head-hover">
 					<tr>
-						<th onclick="sortTable(0)">Task</th>
-						<th onclick="sortTable(1)">Type</th>
-						<th onclick="sortTable(2)">Summary</th>
-						<th onclick="sortTable(3)">Priority</th>
-						<th onclick="sortTable(4)">Status</th>
-						<th onclick="sortTable(5)">Assignee</th>
-						<th onclick="sortTable(6)">Start Date</th>
-						<th onclick="sortTable(7)">Completion Date</th>
+						<th>Task</th>
+						<th>Type</th>
+						<th>Summary</th>
+						<th>Priority</th>
+						<th>Status</th>
+						<th>Assigned To</th>
+						<th>Start Date</th>
+						<th>Completion Date</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -161,7 +161,16 @@
 
 							</td>
 							<td>@row["Type"]</td>
-							<td>@row["Summary"]</td>
+							<td>
+								@{
+									var summary = row["Summary"] as string;
+									if (summary != null && summary.Length > 40)
+									{
+										summary = summary.Substring(0, 25) + "...";
+									}
+								}
+								@summary
+							</td>
 							<td>@row["Priority"]</td>
 							<td>@row["Status"]</td>
 							<td>@row["Assignee"]</td>
@@ -176,55 +185,74 @@
 					}
 				</tbody>
 			</table>
-			<ul class="pagination justify-content-end">
-				@for (int i = 1; i <= ViewBag.PageCount; i++)
+
+			<ul class="pagination justify-content-center">
+				<!-- First Page Button -->
+				<li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+					<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = 1, pageSize = 15 })">
+						<i class="ri-arrow-left-s-line"></i> First
+					</a>
+				</li>
+
+				<!-- Previous Page Button -->
+				<li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+					<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = ViewBag.CurrentPage - 1, pageSize = 15 })">
+						<i class="ri-arrow-left-double-line"></i>
+					</a>
+				</li>
+
+				@if (ViewBag.CurrentPage > 2)
+				{
+					<li class="page-item">
+						<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = 1, pageSize = 15 })">1</a>
+					</li>
+					@if (ViewBag.CurrentPage > 3)
+					{
+						<li class="page-item disabled">
+							<span class="page-link">...</span>
+						</li>
+					}
+				}
+
+				@for (int i = Math.Max(1, ViewBag.CurrentPage - 1); i <= Math.Min(ViewBag.PageCount, ViewBag.CurrentPage + 1); i++)
 				{
 					<li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
-						<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = i, pageSize = 10 })">@i</a>
+						<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = i, pageSize = 15 })">@i</a>
 					</li>
 				}
+
+				@if (ViewBag.CurrentPage < ViewBag.PageCount - 1)
+				{
+					@if (ViewBag.CurrentPage < ViewBag.PageCount - 2)
+					{
+						<li class="page-item disabled">
+							<span class="page-link">...</span>
+						</li>
+					}
+					<li class="page-item">
+						<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = ViewBag.PageCount, pageSize = 15 })">@ViewBag.PageCount</a>
+					</li>
+				}
+
+				<!-- Next Page Button -->
+				<li class="page-item @(ViewBag.CurrentPage == ViewBag.PageCount ? "disabled" : "")">
+					<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = ViewBag.CurrentPage + 1, pageSize = 15 })">
+						<i class="ri-arrow-right-double-line"></i>
+					</a>
+				</li>
+
+				<!-- Last Page Button -->
+				<li class="page-item @(ViewBag.CurrentPage == ViewBag.PageCount ? "disabled" : "")">
+					<a class="page-link" href="@Url.Action("DeletedTasks", "Tasks", new { page = ViewBag.PageCount, pageSize = 15 })">
+						Last <i class="ri-arrow-right-s-line"></i>
+					</a>
+				</li>
 			</ul>
+
 		</div>
 	</div>
 
-	<script>
-		function sortTable(columnIndex) {
-			var table, rows, switching, i, x, y, shouldSwitch, dir, switchCount = 0;
-			table = document.querySelector('.table');
-			switching = true;
-			dir = "asc";
-			while (switching) {
-				switching = false;
-				rows = table.rows;
-				for (i = 1; i < (rows.length - 1); i++) {
-					shouldSwitch = false;
-					x = rows[i].getElementsByTagName("TD")[columnIndex];
-					y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
-					if (dir == "asc") {
-						if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-							shouldSwitch = true;
-							break;
-						}
-					} else if (dir == "desc") {
-						if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-							shouldSwitch = true;
-							break;
-						}
-					}
-				}
-				if (shouldSwitch) {
-					rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-					switching = true;
-					switchCount++;
-				} else {
-					if (switchCount == 0 && dir == "asc") {
-						dir = "desc";
-						switching = true;
-					}
-				}
-			}
-		}
-	</script>
+	
 
 </body>
 

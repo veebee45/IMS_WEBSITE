@@ -38,6 +38,7 @@
                 height: 100%;
                 border-radius: 50%;
                 object-fit: cover;
+                margin-top: 0px;
             }
 
         .card_content {
@@ -80,10 +81,38 @@
                 color: black;
             }
 
+        .graphbtn {
+            position: relative;
+            background-color: #fff;
+            color: black;
+            border: none;
+            box-shadow: 0 0 10px rgba(117, 117, 117, 0.5);
+            padding: 3px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 5px;
+            cursor: pointer;
+            justify-content: flex-end;
+        }
+
+
+            .graphbtn:hover {
+                background: #a196c5;
+                color: #fff;
+                font-weight: bold;
+            }
     </style>
 </head>
 <body>
-    <section class="swiper mySwiper">
+
+    <div class="col" style="text-align: end; margin-bottom: 10px; margin-top:15px;">
+        <button class="graphbtn" id="PexportBtnExcel" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px; margin-top:5px;">Add Module</button>
+        <button class="graphbtn" id="PexportBtnCsv" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px;margin-top:5px;">Add Exe</button>
+    </div>
+
+    <section class="swiper mySwiper" style="margin-top: 100px;">
         <div class="swiper-wrapper">
             <div class="card swiper-slide">
                 <div class="card_image">

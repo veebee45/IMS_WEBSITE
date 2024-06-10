@@ -32,7 +32,5 @@ namespace IMS_MIS.Classes
                 }
             }
         }
-
-
-    }
+	}
 }

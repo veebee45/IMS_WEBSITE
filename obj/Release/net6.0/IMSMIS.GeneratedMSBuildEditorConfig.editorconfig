@@ -42,12 +42,60 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkhBXE5IQS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Test/Testing/Test/IMS_WEBSITE/Views/Notification/Notification.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm90aWZpY2F0aW9uXE5vdGlmaWNhdGlvbi5jc2h0bWw=
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Notifications/Notifications.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTm90aWZpY2F0aW9uc1xOb3RpZmljYXRpb25zLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Projects/AddProject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcQWRkUHJvamVjdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Projects/EditProject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcRWRpdFByb2plY3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Projects/Projects.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcUHJvamVjdHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Projects/ViewProject.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvamVjdHNcVmlld1Byb2plY3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/AddReport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xBZGRSZXBvcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/IssueReports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xJc3N1ZVJlcG9ydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/MonthWise.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xNb250aFdpc2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/Project.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xQcm9qZWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/ProjectReport.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xQcm9qZWN0UmVwb3J0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/ReportGraph.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xSZXBvcnRHcmFwaC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/Reports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xSZXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/ReportTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xSZXBvcnRUYWJsZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Reports/ReportView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUmVwb3J0c1xSZXBvcnRWaWV3LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Test/Testing/Test/IMS_WEBSITE/Views/Shared/Error.cshtml]
@@ -74,16 +122,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFza3NcVGFza3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Tools/AddTool.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcQWRkVG9vbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Test/Testing/Test/IMS_WEBSITE/Views/Tools/Tools.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcVG9vbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Test/Testing/Test/IMS_WEBSITE/Views/User/AddUser.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxBZGRVc2VyLmNzaHRtbA==
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Tools/ToolsView.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVG9vbHNcVG9vbHNWaWV3LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Test/Testing/Test/IMS_WEBSITE/Views/User/Users.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlclxVc2Vycy5jc2h0bWw=
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Users/AddUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQWRkVXNlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Test/Testing/Test/IMS_WEBSITE/Views/Users/Users.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcVXNlcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Test/Testing/Test/IMS_WEBSITE/Views/_ViewImports.cshtml]

@@ -1,0 +1,282 @@
+﻿@using System.Data
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Project Total Counts Graph</title>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<style>
+
+		.card {
+			flex: 1;
+			box-shadow: 0 0 8px rgba(117, 117, 117, 0.5);
+			border-radius: 5px;
+			overflow: hidden;
+		}
+
+			.card .card-head {
+				color: black;
+				padding: 10px;
+			}
+
+			.card .card-body {
+				padding: 10px;
+			}
+
+		.graphbtn {
+			position: relative;
+			background-color: #fff;
+			color: black;
+			border: none;
+			box-shadow: 0 0 10px rgba(117, 117, 117, 0.5);
+			padding: 3px 20px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			margin: 5px 5px;
+			cursor: pointer;
+			justify-content: flex-end;
+		}
+
+
+			.graphbtn:hover {
+				background: #a196c5;
+				color: #fff;
+				font-weight: bold;
+			}
+
+        .filter-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+            .filter-container label {
+                margin-right: 10px;
+                font-weight: bold;
+            }
+
+            .filter-container select {
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+                width: 150px;
+            }
+
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+        }
+	</style>
+
+</head>
+<body>
+    <div class="card">
+
+        <div class="card-head">
+            <div class="row">
+                <div class="col filter-container">
+                    <div>
+                       
+                        <select id="projectNameFilter" onchange="filterTable()">
+                            <option value="">All Project</option>
+                        </select>
+                      
+                        <select id="stateFilter" onchange="filterTable()">
+                            <option value="">All State</option>
+                        </select>
+
+                    </div>
+                    <div style="text-align: end;">
+@*                         <button class="graphbtn" id="PexportBtnExcel" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px; margin-top:5px;">Excel Export</button>
+                        <button class="graphbtn" id="PexportBtnCsv" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px;margin-top:5px;">Csv Export</button> *@
+                        <button class="graphbtn" id="PexportBtnExcel" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px; margin-top:5px;">Excel Export</button>
+                        <button class="graphbtn" id="PexportBtnCsv" style="border-radius:10px; margin-right: 10px;margin-bottom: 5px;margin-top:5px;" onclick="exportToCSV()">Csv Export</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <table id="projectTable">
+                <tr>
+                    <th>Project Name</th>
+                    <th>State</th>
+                    <th>Data Receiving Date</th>
+                    <th>Total Data Count</th>
+                    <th>Accepted Data Count</th>
+                    <th>Rejected Data Count</th>
+                    <th>Development Time</th>
+                    <th>Production Time</th>
+                    <th>Current Status</th>
+                </tr>
+
+                @foreach (DataRow row in Model.Rows)
+                {
+                    <tr>
+                        <td>@row["Project"]</td>
+                        <td>@row["State"]</td>
+                        <td>@Convert.ToDateTime(row["Date"]).ToString("dd-MMM-yyyy")</td>
+                        <td>@row["TotalData"]</td>
+                        <td>@row["ProcessedData"]</td>
+                        <td>@row["RejectedData"]</td>
+                        <td>@row["Developement_Time"]</td>
+                        <td>@row["Production_Time"]</td>
+                        <td>@row["Current_Status"]</td>
+                    </tr>
+                }
+
+                <!-- Add more rows as needed -->
+            </table>
+
+            <ul class="pagination justify-content-center" style="margin-top:20px">
+
+                @if (ViewBag.PageCount > 1)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("ReportTable", "Reports", new { page = 1, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+                            <i class="ri-arrow-left-s-line"></i> First
+                        </a>
+                    </li>
+                }
+
+                <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("ReportTable", "Reports", new { page = ViewBag.CurrentPage - 1, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+                        <i class="ri-arrow-left-double-line"></i>
+                    </a>
+                </li>
+                @for (int i = Math.Max(1, ViewBag.CurrentPage - 2); i <= Math.Min(ViewBag.CurrentPage + 2, ViewBag.PageCount); i++)
+                {
+                    <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("ReportTable", "Reports", new { page = i, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(ViewBag.CurrentPage == ViewBag.PageCount ? "disabled" : "")">
+                    <a class="page-link" href="@Url.Action("ReportTable", "Reports", new { page = ViewBag.CurrentPage + 1, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+                        <i class="ri-arrow-right-double-line"></i>
+                    </a>
+                </li>
+                @if (ViewBag.PageCount > 1)
+                {
+                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.PageCount ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("ReportTable", "Reports", new { page = ViewBag.PageCount, pageSize = 15, assignees = ViewBag.SelectedAssignees, statuses = ViewBag.SelectedStatuses, priorities = ViewBag.SelectedPriorities, projects = ViewBag.SelectedProjects })">
+                            Last <i class="ri-arrow-right-s-line"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+
+        </div>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.4/xlsx.full.min.js"></script>
+    <script>
+        function populateFilters() {
+            var table = document.getElementById("projectTable");
+            var projectNames = new Set();
+            var states = new Set();
+
+            for (var i = 1; i < table.rows.length; i++) {
+                projectNames.add(table.rows[i].cells[0].innerText);
+                states.add(table.rows[i].cells[1].innerText);
+            }
+
+            var projectNameFilter = document.getElementById("projectNameFilter");
+            var stateFilter = document.getElementById("stateFilter");
+
+            projectNames.forEach(function (name) {
+                var option = document.createElement("option");
+                option.value = name;
+                option.text = name;
+                projectNameFilter.add(option);
+            });
+
+            states.forEach(function (state) {
+                var option = document.createElement("option");
+                option.value = state;
+                option.text = state;
+                stateFilter.add(option);
+            });
+        }
+
+        function filterTable() {
+            var projectNameFilter = document.getElementById("projectNameFilter").value;
+            var stateFilter = document.getElementById("stateFilter").value;
+            var table = document.getElementById("projectTable");
+            var rows = table.getElementsByTagName("tr");
+
+            for (var i = 1; i < rows.length; i++) {
+                var projectNameCell = rows[i].getElementsByTagName("td")[0];
+                var stateCell = rows[i].getElementsByTagName("td")[1];
+
+                if (projectNameCell && stateCell) {
+                    var projectName = projectNameCell.textContent;
+                    var state = stateCell.textContent;
+
+                    if ((projectNameFilter === "" || projectName === projectNameFilter) &&
+                        (stateFilter === "" || state === stateFilter)) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        window.onload = populateFilters;
+    </script>
+
+    <script>
+        document.getElementById('PexportBtnExcel').addEventListener('click', function () {
+            var table = document.getElementById('projectTable');
+            var wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+            XLSX.writeFile(wb, 'project_data.xlsx');
+        });
+
+
+
+        function exportToCSV() {
+            // Get table element
+            var table = document.getElementById("projectTable");
+
+            // CSV content
+            var csvContent = "";
+
+            // Add table headers to CSV
+            for (var i = 0; i < table.rows[0].cells.length; i++) {
+                csvContent += table.rows[0].cells[i].innerText + ",";
+            }
+            csvContent += "\n";
+
+            // Add table rows to CSV
+            for (var i = 1; i < table.rows.length; i++) {
+                for (var j = 0; j < table.rows[i].cells.length; j++) {
+                    csvContent += table.rows[i].cells[j].innerText + ",";
+                }
+                csvContent += "\n";
+            }
+
+            // Create CSV file
+            var csvBlob = new Blob([csvContent], {
+                type: "text/csv;charset=utf-8"
+            });
+
+            // Create download link
+            var csvLink = document.createElement("a");
+            csvLink.href = URL.createObjectURL(csvBlob);
+            csvLink.download = "project_data.csv";
+            csvLink.click();
+        }
+    </script>
+</body>
+</html>

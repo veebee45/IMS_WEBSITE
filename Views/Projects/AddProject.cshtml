@@ -1,0 +1,427 @@
+﻿@model IMSMIS.Models.Projects
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<link rel="stylesheet" href="/css/Users.css">
+	<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+	<style>
+
+		.card {
+			width: 98.9%;
+			margin: 10px;
+			height: 800px;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+			width: 80%;
+		}
+
+		button {
+			margin-top: 20px;
+		}
+
+
+		.form-control:focus, .form-select:focus {
+			outline: none;
+			border: 1px solid #ced4da;
+			box-shadow: none;
+		}
+
+		.modaltest {
+			display: none;
+			position: fixed;
+			z-index: 1;
+			left: 0;
+			top: 0;
+			width: 100%;
+			height: 100%;
+			overflow: auto;
+			background-color: transparent;
+			backdrop-filter: blur(3px);
+		}
+
+
+		.modal-content_test {
+			background-color: #fefefe;
+			margin: 15% auto;
+			padding: 20px;
+			border: 1px solid #888;
+			width: 30%;
+			box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+		}
+
+		.close1 {
+			width: 20%;
+			background: transparent;
+			color: #337DFF;
+			border: 1px solid #337DFF;
+			border-radius: 4px;
+		}
+
+			.close1:hover,
+			.close1:focus {
+				width: 20%;
+				background: #337DFF;
+				color: #fff;
+				border: 1px solid #337DFF;
+			}
+
+		.dropbtn {
+			background-color: #fff;
+			color: black;
+			padding: 4px 6px;
+			text-align: center;
+			font-size: 15px;
+			font-weight: 600;
+			border: 1px solid gray;
+			border-radius: 5px;
+			cursor: pointer;
+		}
+
+		.dropdown-content {
+			display: none;
+			position: absolute;
+			border-radius: 8px;
+			background-color: #fff;
+			min-width: 200px;
+			border: 1px solid #ddd;
+			padding: 10px;
+			z-index: 1000;
+		}
+
+			.dropdown-content label {
+				display: block;
+			}
+
+		.searchfield:focus {
+			border: none;
+			outline: none;
+			border-bottom: 1px solid gray;
+		}
+
+		.modal-img {
+			width: 100%;
+		}
+
+	</style>
+	<title>IMS-MIS</title>
+
+</head>
+
+<div class="card">
+	<div class="card-header d-flex justify-content-between">
+		<h5 class="card-title" style="margin-top: 9px;">
+			Create Project
+		</h5>
+		<a href="/Projects/Projects" class="newuser"><i class="ri-arrow-left-circle-line"></i>Back</a>
+	</div>
+	<div class="card-body p-3">
+
+		<div>
+			Projects group related content together based on a common objective or goal. A project can be any initiative or activity that requires coordination and collaboration among team members including software development projects, marketing campaigns, and customer support initiatives.
+
+			<strong><br /><br />General Info</strong>
+		</div>
+
+		<form asp-controller="Projects" asp-action="Create" method="post" enctype="multipart/form-data">
+			<div class="form-group mt-3 row">
+				<label for="firstName" class="col-sm-3 col-form-label">
+					Project Name <font color="red">*</font>
+				</label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" placeholder="Enter Project Name" id="firstName" autocomplete="off" asp-for="ProjectName" required>
+				</div>
+			</div>
+
+			<div class="form-group mt-3 row align-items-center">
+				<label for="proId" class="col-sm-3 col-form-label text-right">
+					Project Id <font color="red">*</font>
+				</label>
+				<div class="col-sm-2">
+					<input type="text" class="form-control" autocomplete="off" id="proId" asp-for="ProjectId" required>
+				</div>
+				<label for="proId_Note" class="col-sm-7 col-form-label">
+					This value is used as a prefix in IDs for issues and articles that belong to this project
+				</label>
+			</div>
+
+			<div class="dropdown" id="assigneeFilterDropdown" style="margin-right:10px">
+				<button class="dropbtn" type="button" style="width:810px;display:flex;align-items:center;justify-content:space-between">
+					<span style="order:1">--Select Assignee--</span>
+					<i class="bi bi-chevron-down" style="margin-left:5px;order:2"></i>
+				</button>
+				<div class="dropdown-content">
+					<input class="searchfield" type="text" id="assigneeSearch" placeholder="Search assignees..." style="width:100%; box-sizing:border-box; padding:8px; margin-bottom:8px; border:none; border-bottom:1px solid white;">
+					@foreach (var assignee in ViewBag.UniqueAssignees)
+					{
+						string displayName = assignee;
+						if (assignee == Context.Session.GetString("UserName"))
+						{
+							displayName = "Me";
+						}
+						<label>
+							<input type="checkbox" name="assignees" value="@assignee" @(ViewBag.SelectedAssignees != null && ViewBag.SelectedAssignees.Contains(assignee) ? "checked" : "") class="filter-checkbox">
+							@displayName
+						</label>
+					}
+				</div>
+			</div>
+
+			<div id="selectedAssignees" style="display:none;"></div>
+
+			<div class="form-group mt-3 row">
+				<label for="firstName" class="col-sm-3 col-form-label">Project Description <font color="red">*</font></label>
+				<div class="col-sm-5">
+					<input type="text" class="form-control" placeholder="Enter Project Description" id="Description" asp-for="ProjectDescription" autocomplete="off" required>
+				</div>
+			</div>
+
+			<div class="form-group mt-3 row">
+				<label class="col-sm-3 col-form-label" for="projectType">Select Project Image <font color="red">*</font></label>
+				<div class="col-sm-5">
+					<select id="projectType" class="form-select" asp-for="ProjectType" required>
+						<option value="Type1">--select--</option>
+						<option value="Yes">Yes</option>
+						<option value="No">No</option>
+					</select>
+				</div>
+			</div>
+
+			<div id="extraOptions" style="display:none;">
+				<div class="form-group mt-3 row">
+					<label class="col-sm-3 col-form-label" for="uploadFile">Choose Project Image <font color="red">*</font></label>
+					<div class="col-sm-5">
+						<input type="file" id="uploadFile" class="form-control" name="uploadFile" asp-for="ImagePath" required>
+					</div>
+				</div>
+			</div>
+
+			<div id="imagePreview" style="display: none;">
+				<div class="form-group mt-3 row">
+					<label class="col-sm-3 col-form-label" for="uploadFile"></label>
+					<div class="col-sm-5">
+						<a href="#" id="imageLink" data-toggle="modal" data-target="#imageModal">View Image</a>
+					</div>
+				</div>
+				
+			</div>
+
+			<button type="submit" class="btn btn-sm btn-primary"><span style="font-weight:500;">Create</span></button>
+		</form>
+	</div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="imageModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="imageModalLabel">Image Preview</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<img id="modalImage" class="modal-img" src="" alt="Image Preview">
+			</div>
+		</div>
+	</div>
+</div>
+
+@if (TempData["ErrorMessage"] != null)
+{
+
+	<div id="myModal" class="modaltest">
+		<div class="modal-content_test">
+			<h4>@TempData["ErrorMessage"]</h4>
+			<button class="close1">OK</button>
+		</div>
+	</div>
+}
+<body>
+
+
+	<script>
+
+		document.getElementById('uploadFile').addEventListener('change', function (event) {
+			const file = event.target.files[0];
+			if (file && file.type.startsWith('image/')) {
+				const reader = new FileReader();
+				reader.onload = function (e) {
+					const imageUrl = e.target.result;
+					document.getElementById('imageLink').href = imageUrl;
+					document.getElementById('modalImage').src = imageUrl;
+					document.getElementById('imagePreview').style.display = 'block';
+				};
+				reader.readAsDataURL(file);
+			} else {
+				alert('Please select a valid image file.');
+				document.getElementById('imagePreview').style.display = 'none';
+			}
+		});
+
+		document.getElementById('firstName').addEventListener('input', function () {
+			var name = this.value;
+			var firstThreeLetters = name.substring(0, 3).toUpperCase();
+			document.getElementById('proId').value = firstThreeLetters;
+		});
+
+		document.addEventListener("DOMContentLoaded", function () {
+			var projectType = document.getElementById("projectType");
+			var extraOptions = document.getElementById("extraOptions");
+			var uploadFile = document.getElementById("uploadFile");
+
+			projectType.addEventListener("change", function () {
+				if (projectType.value === "Yes") {
+					extraOptions.style.display = "block";
+					uploadFile.setAttribute("required", "required");
+				} else {
+					extraOptions.style.display = "none";
+					uploadFile.removeAttribute("required");
+				}
+			});
+		});
+
+		document.getElementById('assigneeSearch').addEventListener('input', function () {
+			filterDropdown('assigneeFilterDropdown', this.value.toLowerCase());
+		});
+
+		function filterDropdown(dropdownId, searchValue) {
+			var dropdown = document.getElementById(dropdownId);
+			var labels = dropdown.getElementsByTagName('label');
+
+			for (var i = 0; i < labels.length; i++) {
+				var label = labels[i];
+				if (label.textContent.toLowerCase().includes(searchValue)) {
+					label.style.display = '';
+				} else {
+					label.style.display = 'none';
+				}
+			}
+		}
+
+		document.addEventListener("DOMContentLoaded", function () {
+			function initializeDropdown(dropdownId, selectedContainerId, originalButtonText) {
+				const dropdown = document.getElementById(dropdownId);
+				const dropdownBtn = dropdown.querySelector('.dropbtn');
+				const dropdownContent = dropdown.querySelector('.dropdown-content');
+				const checkboxes = dropdown.querySelectorAll('.dropdown-content input[type="checkbox"]');
+				const selectedContainer = document.getElementById(selectedContainerId);
+				const dropdownIcon = dropdownBtn.querySelector('.bi');
+
+				dropdownBtn.textContent = originalButtonText;
+				dropdownBtn.appendChild(dropdownIcon);
+
+				dropdownBtn.addEventListener('click', function () {
+					const isVisible = dropdownContent.style.display === 'block';
+					dropdownContent.style.display = isVisible ? 'none' : 'block';
+					dropdownIcon.classList.toggle('bi-chevron-down', isVisible);
+					dropdownIcon.classList.toggle('bi-chevron-up', !isVisible);
+				});
+
+				function updateButtonText() {
+					const selectedLabels = [];
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							selectedLabels.push(checkbox.parentNode.textContent.trim());
+						}
+					});
+
+					let buttonText;
+					if (selectedLabels.length === 0) {
+						buttonText = originalButtonText;
+					} else {
+						buttonText = selectedLabels.join(', ');
+						if (buttonText.length > 100) {
+							buttonText = buttonText.slice(0, 100) + '...';
+						}
+					}
+
+					dropdownBtn.textContent = buttonText;
+					dropdownBtn.appendChild(dropdownIcon);
+				}
+
+				function handleCheckboxChange() {
+					selectedContainer.innerHTML = '';
+					checkboxes.forEach(function (checkbox) {
+						if (checkbox.checked && checkbox.value !== "") {
+							const label = checkbox.parentNode.textContent.trim();
+							const selectedItem = document.createElement('div');
+							selectedItem.textContent = label;
+							selectedContainer.appendChild(selectedItem);
+						}
+					});
+					updateButtonText();
+					localStorage.setItem(dropdownId + '_isOpen', dropdownContent.style.display === 'block');
+				}
+
+				checkboxes.forEach(function (checkbox) {
+					checkbox.addEventListener('change', handleCheckboxChange);
+				});
+
+				document.addEventListener('click', function (event) {
+					const target = event.target;
+					if (!dropdownContent.contains(target) && !dropdownBtn.contains(target)) {
+						dropdownContent.style.display = 'none';
+						dropdownIcon.classList.add('bi-chevron-down');
+						dropdownIcon.classList.remove('bi-chevron-up');
+						localStorage.removeItem(dropdownId + '_isOpen');
+					}
+				});
+
+				const isOpen = localStorage.getItem(dropdownId + '_isOpen');
+				if (isOpen === 'true') {
+					dropdownContent.style.display = 'block';
+					dropdownIcon.classList.remove('bi-chevron-down');
+					dropdownIcon.classList.add('bi-chevron-up');
+				}
+
+				updateButtonText();
+			}
+
+			initializeDropdown('assigneeFilterDropdown', 'selectedAssignees', '--Select Assignee--');
+
+		});
+
+		var modal = document.getElementById("myModal");
+		var closeButton = document.querySelector(".modal-content_test button.close1");
+
+		window.onload = function () {
+			modal.style.display = "block";
+		};
+
+		// Close the modal when the button is clicked
+		closeButton.addEventListener("click", function () {
+			modal.style.display = "none";
+		});
+
+		// Close the modal when the close button is clicked
+		var closeButtonSpan = document.querySelector(".modal-content_test .close1");
+		closeButtonSpan.addEventListener("click", function () {
+			modal.style.display = "none";
+		});
+
+		// Close the modal when clicked outside the modal
+		window.onclick = function (event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		};
+
+	</script>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

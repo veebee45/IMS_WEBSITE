@@ -140,3 +140,34 @@
     border: 1px solid #ced4da;
     box-shadow: none;
 }
+.copy {
+    cursor: pointer;
+    color: gray;
+    position: relative;
+}
+
+    .copy:hover {
+        /*color: #0a58ca;*/
+        color: red;
+    }
+    .copy::after {
+        content: "Copied!";
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #333;
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+        font-size: 12px;
+        
+    }
+
+    .copy.tooltip-visible::after {
+        opacity: 1;
+    }

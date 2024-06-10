@@ -1,0 +1,141 @@
+@using System.Data
+@using Microsoft.AspNetCore.Http
+@model List<ProjectInfo>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Tasks</title>
+
+    <style>
+        .table tbody tr {
+            height: 50px;
+            border-bottom: 1px solid gray;
+        }
+
+        .card {
+            flex: 1;
+            box-shadow: 0 0 8px rgba(117, 117, 117, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+            .card .card-head {
+                color: black;
+                padding: 10px;
+            }
+
+            .card .card-body {
+                padding: 10px;
+            }
+
+        .task {
+            position: relative;
+            margin-top: 25px;
+            background-color: #fff;
+            border: none;
+            box-shadow: 0 0 10px rgba(117, 117, 117, 0.5);
+            color: black;
+            padding: 3px 25px;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 5px 5px;
+            cursor: pointer;
+            justify-content: flex-end;
+            border-radius: 10px;
+        }
+
+            .task:hover {
+                background: #a196c5;
+                color: #fff;
+            }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="card" style="margin-top:10px; min-height:600px;">
+        <div class="card-head" style="border-bottom:1px solid gray;">
+            <div class="row">
+                <div class="col">
+                    <label style="position:relative; font-size:24px; margin-left:20px;font-weight: bold;"><i class="ri-square-fill" style="border:1px solid black; margin-right:7px; font-size:20px;"></i>  Notifications</label>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-head-hover">
+                    <tr>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var projectInfo in Model)
+                    {
+                        <tr style="cursor: pointer;" onclick="handleRowClick('@projectInfo.NID', '@projectInfo.ProjectID')">
+                            <td style="vertical-align: middle; background-color: @(projectInfo.Flag == "True" ? "#D6EAF8" : "#fff");">
+                                <div style="display: flex; align-items: center;">
+                                    <div style="width: 10px; height: 10px; border-radius: 50%; background-color: @(projectInfo.Flag == "True" ? "#F60808 " : "#3EBF24 ");"></div>
+                                    @if (Context.Session.GetString("UserRole") == "Super Admin")
+                                    {
+                                        <a href="javascript:void(0)" style="margin-left: 10px; text-decoration:none; color: black;">
+                                            <strong>@projectInfo.Assigner</strong>  @projectInfo.Message
+                                            @if (!projectInfo.Message.Contains("deleted"))
+                                            {
+                                                @if (projectInfo.Assignee == projectInfo.Assigner)
+                                                {
+                                                    <span>himself</span>
+                                                }
+                                                else
+                                                {
+                                                    <strong>@projectInfo.Assignee</strong>
+                                                }
+                                            }
+                                        </a>
+                                    }
+                                    @if (Context.Session.GetString("UserRole") != "Super Admin")
+                                    {
+                                    <span style="margin-left: 10px;">
+                                        <strong>@projectInfo.Assigner</strong>  @projectInfo.Message
+                                        @if (!projectInfo.Message.Contains("deleted"))
+                                        {
+                                            <span>you.</span>
+                                        }
+                                    </span>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function handleRowClick(NID, projectID) {
+            $.ajax({
+                type: "POST",
+                url: "/Notification/ChangeFlag",
+                data: { ID: NID },
+                success: function () {
+                    // Redirect to the details page after the flag is changed
+                    window.location.href = '/Tasks/Details/' + projectID;
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error changing flag:", error);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

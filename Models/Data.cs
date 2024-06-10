@@ -10,6 +10,14 @@ namespace IMSMIS.Models
 		public int RejectedData { get; set; }
 		public int totaldata { get; set; }
 		public string statename { get; set; }
+		public int year { get; set; }
+		public string month { get; set; }
+	}
+
+	public partial class Data1
+	{
+		public string TeamName { get; set; }
+		public int PendingTask { get; set; }
 
 	}
 }

@@ -12,6 +12,6 @@
         public string Message { get; set;}
 
         public int NID { get; set; }
-
+        public DateTime create_at {  get; set; }
     }
 }
